@@ -1,5 +1,6 @@
 use crate::db::Officer;
 use crate::db::create_table::create_table;
+use crate::db::get_db::get_db;
 use chrono::Local;
 use reqwest::get;
 use rusqlite::{Connection, Result, params};
@@ -22,7 +23,8 @@ pub async fn fetch_and_store_data() -> Result<(), Box<dyn Error>> {
         .from_reader(cursor);
 
     print("Store data");
-    let conn = Connection::open("officers.db")?;
+
+    let conn = get_db()?;
     // CREATE TABLE, IF DOES NOT EXIST
     create_table(&conn).await?;
 

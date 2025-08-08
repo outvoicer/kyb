@@ -31,6 +31,14 @@ cargo watch -x "test query -- --nocapture"
 cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocapture"
 ```
 
+# Responses
+```
+200 - { valid: true, verfication_id: 5 }
+417 Expectation failed - Either is not member of board or data was incomplete
+501 "Server down"
+```
+
+
 # Curl
 curl -X POST http://127.0.0.1:8080/lv \
      -H "Content-Type: application/json" \
