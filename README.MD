@@ -55,6 +55,10 @@ cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocap
 501 "Server down"
 ```
 
+# DB
+```
+sqlite3 /home/www/.local/share/sergeant_server
+```
 
 # Curl
 curl -X POST http://127.0.0.1:10001/lv \
@@ -67,11 +71,16 @@ curl -X POST http://127.0.0.1:10001/lv \
 
  curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
 
- curl -X POST https://in.costpocket.com:8443/lv \
+ curl -X POST https://in.costpocket.com:10002/lv \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
+
+ curl -X POST http://167.172.176.176:10001/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
 
 
- curl -X POST http://in.costpocket.com:8443/lv \
+
+ curl -X POST https://in.costpocket.com:2095/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
