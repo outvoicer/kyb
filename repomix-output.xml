@@ -118,7 +118,7 @@ async fn main() -> std::io::Result<()> {
     //let a = fetch_and_store_data().await;
     // Spawn the schedule task using actix_rt::spawn
     spawn(schedule_task());
-    let address = "127.0.0.1:8080";
+    let address = "127.0.0.1:9010";
     // Start the Actix Web server
     println!("KYB server: {}", &address);
     HttpServer::new(|| App::new().route("/lv", web::post().to(query_officer)))

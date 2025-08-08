@@ -21,7 +21,24 @@ cargo build --release
 # Run
 ```
 cargo run --release
-Runs at 127.0.0.1:8080
+Runs at 127.0.0.1:9010
+```
+
+# Deploy
+```
+sudo nano /etc/systemd/system/kyb.service
+
+[Unit]
+Description=KYB Server
+After=network.target
+
+[Service]
+User=www
+ExecStart=/home/www/kyb/target/release/kyb
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 # Test
@@ -40,14 +57,14 @@ cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocap
 
 
 # Curl
-curl -X POST http://127.0.0.1:8080/lv \
+curl -X POST http://127.0.0.1:9010/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
 
-curl -X POST http://127.0.0.1:8080/lv \
+curl -X POST http://127.0.0.1:9010/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Sernjuk Joonas", "personal_code": "123456", "reg_code": "40203537286"}'
 
- curl -X POST http://127.0.0.1:8080/lv \
+ curl -X POST http://127.0.0.1:9010/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
