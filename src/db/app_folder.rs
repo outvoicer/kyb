@@ -7,8 +7,8 @@ const COMPANY_DB: &str = "finance_folder";
 pub fn app_folder() -> Result<PathBuf, KybError> {
     let path =
         data_dir().ok_or_else(|| KybError::StringError("Unable to find main directory".into()))?;
+
     let company_db_path = path.join(COMPANY_DB);
-    //    println!("{:?}", &company_db_path);
 
     if !company_db_path.exists() {
         create_home_dir(company_db_path.clone())?;
