@@ -42,4 +42,4 @@ curl -X POST http://127.0.0.1:8080/lv \
 
  curl -X POST http://127.0.0.1:8080/lv \
      -H "Content-Type: application/json" \
-     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}'
+     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv

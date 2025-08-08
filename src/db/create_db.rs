@@ -1,11 +1,11 @@
 //use super::init::initialize_db;
 use crate::db::create_table::create_table;
 use crate::db::db_file::db_file;
-use crate::error::AppError;
+use crate::error::KybError;
 //use rusqlite::Connection;
 use rusqlite::{Connection, Result};
 
-pub async fn create_db(password: &String) -> Result<Connection, AppError> {
+pub async fn create_db(password: &String) -> Result<Connection, KybError> {
     let file = db_file()?;
     let conn = Connection::open(file)?;
     // Set the encryption key

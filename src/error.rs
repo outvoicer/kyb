@@ -1,7 +1,7 @@
 use thiserror::Error;
 //
 #[derive(Error, Debug)]
-pub enum AppError {
+pub enum KybError {
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
 

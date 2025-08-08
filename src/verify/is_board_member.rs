@@ -1,8 +1,8 @@
 use crate::db::query::Query;
-use crate::error::AppError;
+use crate::error::KybError;
 use rusqlite::{Connection, params};
 
-pub async fn is_board_member(conn: &Connection, query: &Query) -> Result<(), AppError> {
+pub async fn is_board_member(conn: &Connection, query: &Query) -> Result<(), KybError> {
     let mut stmt =
         conn.prepare("SELECT personal_code FROM officers WHERE name = ?1 AND reg_code = ?2")?;
 
@@ -22,5 +22,5 @@ pub async fn is_board_member(conn: &Connection, query: &Query) -> Result<(), App
         }
     }
 
-    Err(AppError::StringError("Not member of board".to_string()))
+    Err(KybError::StringError("Not member of board".to_string()))
 }

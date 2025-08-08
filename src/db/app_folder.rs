@@ -1,12 +1,12 @@
 use crate::db::create_home_dir::create_home_dir;
-use crate::error::AppError;
+use crate::error::KybError;
 use dirs::data_dir;
 use std::path::PathBuf;
 const COMPANY_DB: &str = "finance_folder";
 
-pub fn app_folder() -> Result<PathBuf, AppError> {
+pub fn app_folder() -> Result<PathBuf, KybError> {
     let path =
-        data_dir().ok_or_else(|| AppError::StringError("Unable to find main directory".into()))?;
+        data_dir().ok_or_else(|| KybError::StringError("Unable to find main directory".into()))?;
     let company_db_path = path.join(COMPANY_DB);
     //    println!("{:?}", &company_db_path);
 

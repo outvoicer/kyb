@@ -1,10 +1,10 @@
 use crate::db::query::Query;
-use crate::error::AppError;
+use crate::error::KybError;
 use crate::verify::is_board_member::is_board_member;
 use crate::verify::validate::validate_data;
 use rusqlite::Connection;
 
-pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(), AppError> {
+pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(), KybError> {
     validate_data(query)?;
     is_board_member(&conn, query).await?;
     Ok(())
