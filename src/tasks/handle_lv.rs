@@ -4,7 +4,7 @@ use crate::error::KybError;
 use crate::verify::validate_and_verify::validate_and_verify;
 use actix_web::{HttpResponse, Responder, web};
 
-pub async fn respond_to_lv(query: web::Json<Query>) -> impl Responder {
+pub async fn handle_lv(query: web::Json<Query>) -> impl Responder {
     match get_db() {
         Ok(conn) => match validate_and_verify(&conn, &query).await {
             Ok(_) => {
