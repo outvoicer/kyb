@@ -1,7 +1,7 @@
 use crate::db::{get_db::get_db, log::log};
+use crate::error::AppError;
 use crate::verify::validate_and_verify::validate_and_verify;
 use actix_web::{HttpResponse, Responder, web};
-use rusqlite::{Connection, params};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
@@ -31,10 +31,17 @@ pub async fn query_officer(query: web::Json<Query>) -> impl Responder {
                 HttpResponse::Ok()
                     .json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
             }
-            Err(err) => {
-                let e = format!("{:?}", err);
-                HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": e }))
-            }
+            Err(err) => match err {
+                AppError::StringError(err) => {
+                    let e = format!("{:?}", err);
+                    HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": e }))
+                }
+                _ => {
+                    eprintln!("{:?}", err);
+                    HttpResponse::InternalServerError()
+                        .json(serde_json::json!({ "error": "Error, Sorry" }))
+                }
+            },
         },
         Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": "No db" })),
     }
