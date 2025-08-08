@@ -1,5 +1,4 @@
 pub mod app_folder;
-pub mod create_db;
 pub mod create_home_dir;
 pub mod create_table;
 pub mod db_file;
