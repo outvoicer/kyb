@@ -2,7 +2,7 @@ use crate::db::create_home_dir::create_home_dir;
 use crate::error::KybError;
 use dirs::data_dir;
 use std::path::PathBuf;
-const COMPANY_DB: &str = "kyb_folder";
+const COMPANY_DB: &str = "kyb";
 
 pub fn app_folder() -> Result<PathBuf, KybError> {
     let path =

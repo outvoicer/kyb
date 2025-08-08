@@ -57,7 +57,7 @@ cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocap
 
 # DB
 ```
-sqlite3 /home/www/.local/share/sergeant_server
+sqlite3 /home/www/.local/share/kyb_server
 ```
 
 # Curl
