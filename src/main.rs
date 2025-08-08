@@ -1,4 +1,5 @@
 mod db;
+mod error;
 mod tasks;
 mod verify;
 

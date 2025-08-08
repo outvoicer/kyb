@@ -6,9 +6,9 @@ pub async fn schedule_update() {
     loop {
         let now = Local::now();
         let next_run = now
-            .with_hour(21)
+            .with_hour(02)
             .unwrap()
-            .with_minute(34)
+            .with_minute(0)
             .unwrap()
             .with_second(0)
             .unwrap();

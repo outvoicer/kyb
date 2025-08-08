@@ -1,6 +1,6 @@
 KYB server to determine Latvian members of boards.
 
-Send person name, personal id and company registration code.
+Send person name (order: lastname + firstname), personal id and company registration code.
 Receive confirmation, that this person is on the member of board of organisation.
 Log server results.
 

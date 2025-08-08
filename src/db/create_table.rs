@@ -1,7 +1,7 @@
+use crate::error::AppError;
 use rusqlite::{Connection, Result};
-use std::error::Error;
 
-pub async fn create_table(conn: &Connection) -> Result<(), Box<dyn Error>> {
+pub async fn create_table(conn: &Connection) -> Result<(), AppError> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS officers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

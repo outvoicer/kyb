@@ -1,4 +1,4 @@
-use crate::db::log::log;
+use crate::db::{get_db::get_db, log::log};
 use crate::verify::validate_and_verify::validate_and_verify;
 use actix_web::{HttpResponse, Responder, web};
 use rusqlite::{Connection, params};
@@ -22,12 +22,17 @@ impl Query {
 }
 
 pub async fn query_officer(query: web::Json<Query>) -> impl Responder {
-    let conn = Connection::open("officers.db").unwrap();
-    match validate_and_verify(&conn, &query).await {
-        Ok(_) => {
-            let new_id = log(&conn, &query, true).unwrap();
-            HttpResponse::Ok().json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
-        }
-        Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err })),
+    //let conn = Connection::open("officers.db").unwrap();
+    //let conn = get_db().unwrap();
+    match get_db() {
+        Ok(conn) => match validate_and_verify(&conn, &query).await {
+            Ok(_) => {
+                let new_id = log(&conn, &query, true).unwrap();
+                HttpResponse::Ok()
+                    .json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
+            }
+            Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err })),
+        },
+        Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": "No db" })),
     }
 }
