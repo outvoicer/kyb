@@ -21,7 +21,7 @@ cargo build --release
 # Run
 ```
 cargo run --release
-Runs at 127.0.0.1:8443
+Runs at 127.0.0.1:10001
 ```
 
 # Deploy
@@ -57,16 +57,21 @@ cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocap
 
 
 # Curl
-curl -X POST http://127.0.0.1:8443/lv \
+curl -X POST http://127.0.0.1:10001/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
 
-curl -X POST http://127.0.0.1:8443/lv \
+curl -X POST http://127.0.0.1:10001/lv \
      -H "Content-Type: application/json" \
-     -d '{"name": "Sernjuk Joonas", "personal_code": "123456", "reg_code": "40203537286"}'
+     -d '{"name": "Sernjuk Joonas", "personal_code": "38303224942", "reg_code": "40203537286"}'
 
- curl -X POST http://127.0.0.1:8443/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
+ curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
 
  curl -X POST https://in.costpocket.com:8443/lv \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
+
+
+ curl -X POST http://in.costpocket.com:8443/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
