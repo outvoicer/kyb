@@ -67,6 +67,6 @@ curl -X POST http://127.0.0.1:8443/lv \
 
  curl -X POST http://127.0.0.1:8443/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
 
- curl -X POST https://in.costpocket.com:9010/lv \
+ curl -X POST https://in.costpocket.com:8443/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv

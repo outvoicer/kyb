@@ -23,21 +23,31 @@ pub async fn fetch_and_store_data() -> Result<(), Box<dyn Error>> {
         .from_reader(cursor);
 
     print("Store data");
-
-    let conn = get_db()?;
+    let mut conn = get_db()?;
     // CREATE TABLE, IF DOES NOT EXIST
     create_table(&conn).await?;
-
     // DELETE ALL EXISTING RECORDS
     conn.execute("DELETE FROM officers", [])?;
+    // Begin a transaction
+    let transaction = conn.transaction()?;
 
-    for result in rdr.deserialize() {
-        let officer: Officer = result?;
-        conn.execute(
+    {
+        let mut stmt = transaction.prepare(
             "INSERT INTO officers (reg_code, name, personal_code, position) VALUES (?1, ?2, ?3, ?4)",
-            params![officer.at_legal_entity_registration_number, officer.name, officer.latvian_identity_number_masked, officer.position],
         )?;
+        for result in rdr.deserialize() {
+            let officer: Officer = result?;
+            stmt.execute(params![
+                officer.at_legal_entity_registration_number,
+                officer.name,
+                officer.latvian_identity_number_masked,
+                officer.position
+            ])?;
+        }
     }
+
+    transaction.commit()?;
+
     print("Data saved");
     Ok(())
 }
