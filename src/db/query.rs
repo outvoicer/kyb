@@ -31,7 +31,10 @@ pub async fn query_officer(query: web::Json<Query>) -> impl Responder {
                 HttpResponse::Ok()
                     .json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
             }
-            Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err })),
+            Err(err) => {
+                let e = format!("{:?}", err);
+                HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": e }))
+            }
         },
         Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": "No db" })),
     }

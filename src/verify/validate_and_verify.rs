@@ -1,16 +1,13 @@
 use crate::db::query::Query;
+use crate::error::AppError;
 use crate::verify::is_board_member::is_board_member;
 use crate::verify::validate::validate_data;
 use rusqlite::Connection;
 
-pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(), String> {
+pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(), AppError> {
     validate_data(query)?;
-    let is = is_board_member(&conn, query).await;
-    if is {
-        Ok(())
-    } else {
-        Err("Error: is not board member".to_string())
-    }
+    is_board_member(&conn, query).await?;
+    Ok(())
 }
 
 #[cfg(test)]
