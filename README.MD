@@ -89,16 +89,6 @@ WantedBy=multi-user.target
 ```
 
 # Curl
-curl -X POST http://127.0.0.1:10001/lv \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
+curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
 
-curl -X POST http://127.0.0.1:10001/lv \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Sernjuk Joonas", "personal_code": "38303224942", "reg_code": "40203537286"}'
-
- curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
-
- curl -X POST https://kyb.costpocket.com/lv \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
+ curl -X POST https://kyb.costpocket.com/lv -H "Content-Type: application/json" -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
