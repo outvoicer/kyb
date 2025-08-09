@@ -55,6 +55,7 @@ here you can set server address + port and schedule db update time.
 
 # Build
 ```
+// sudo apt-get install libsqlite3-dev
 cargo build --release
 ```
 
