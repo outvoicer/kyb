@@ -16,6 +16,7 @@ https://dati.ur.gov.lv/officers/officers.csv
 + Reg code has to be exact match
 + If CSV entry has personal code, then personal code is matched.
 + If entry does not have personal code in db (like foreign owners), then personal code is not used for validation.
++ Compay reg code has to be 11 characters
 
 # Run
 ```
@@ -47,6 +48,7 @@ cargo watch -x "test test_two_janises -- --nocapture"
 200 - { valid: true, verfication_id: 5 }
 417 Expectation failed - Either is not member of board or data was incomplete
 501 "Server down"
+
 ```
 
 # DB
