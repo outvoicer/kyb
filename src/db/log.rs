@@ -1,14 +1,13 @@
-use crate::db::query::Query;
+use crate::{db::query::Query, error::KybError};
 use chrono::Local;
 use rusqlite::{Connection, params};
-use std::error::Error;
 
 pub fn log(
     conn: &Connection,
     query: &Query,
     decition: bool,
     error: Option<&String>,
-) -> Result<i64, Box<dyn Error>> {
+) -> Result<i64, KybError> {
     let now = Local::now();
     let err = match error {
         Some(err) => err,

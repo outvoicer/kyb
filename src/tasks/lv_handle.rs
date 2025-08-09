@@ -9,14 +9,22 @@ pub async fn handle_lv(query: web::Json<Query>) -> Result<i64, KybError> {
     match validate_and_verify(&db, &query).await {
         Ok(_) => {
             // ERROR HANDLE SEE UNWRAP - ANNAB EMPTY REPLY KUI DB-D EI OLE
-            let new_id = log(&db, &query, true, None).unwrap();
+            let new_id = log(&db, &query, true, None)?;
             Ok(new_id)
         }
         Err(err) => match err {
-            KybError::StringError(err) => Err(KybError::StringError(err)),
+            // VERIFICATION ERROR
+            KybError::StringError(err) => {
+                let error_id = log(&db, &query, false, Some(&err.to_string()))?;
+                let error = format!("{} {}", error_id, err);
+                Err(KybError::StringError(error))
+            }
             _ => {
-                eprintln!("{:?}", err);
-                Err(KybError::StringError("Server down".to_string()))
+                // SERVER ERROR
+                eprintln!("server down: {:?}", &err);
+                let error_id = log(&db, &query, false, Some(&err.to_string()))?;
+                let error = format!("Server down. Error id: {}", error_id);
+                Err(KybError::StringError(error))
             }
         },
     }
