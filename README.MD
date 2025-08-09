@@ -2,27 +2,57 @@ KYB server to determine Latvian members of boards.
 
 Send person name (order: lastname + firstname), personal id and company registration code.
 Receive confirmation, that this person is on the member of board of organisation.
-Log server results.
+
+Updates itself every night for Latvian Open Data portal.
+
+Logs server results.
 
 # Source
 https://dati.ur.gov.lv/officers/officers.csv
 
 # Considerations:
-+ Every role in this table is considered as a positive match (Also Liqvidators and others)
-+ Name and reg code have to be exact matches (Bērziņš Jānis, not Berzins Janis)
-+ If entry has personal code, then personal code is matched.
-+ If entry does not have personal code in db (for foreign owners), then personal code is not used for validation.
++ Every role in the CSV is considered as a positive match (Also Liqvidators and others)
++ Name has to be exact match (Bērziņš Jānis, not Berzins Janis)
++ Reg code has to be exact match
++ If CSV entry has personal code, then personal code is matched.
++ If entry does not have personal code in db (like foreign owners), then personal code is not used for validation.
+
+# Run
+```
+cargo run
+Runs at 127.0.0.1:10001
+```
+
+# Install DB
+```
+./kyb install
+or
+cargo run install
+```
 
 # Build
 ```
 cargo build --release
 ```
 
-# Run
+# Test
 ```
-cargo run --release
-Runs at 127.0.0.1:10001
+cargo watch -x "test"
+cargo watch -x "test query -- --nocapture"
+cargo watch -x "test test_two_janises -- --nocapture"
 ```
+
+# Responses
+```
+200 - { valid: true, verfication_id: 5 }
+417 Expectation failed - Either is not member of board or data was incomplete
+501 "Server down"
+```
+
+# DB
+```
+sqlite3 /home/www/.local/share/kyb/kyb.db
+sqlite3 /Users/martin/Library/Application\ Support/kyb/kyb.db```
 
 # Deploy
 ```
@@ -39,25 +69,6 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-```
-
-# Test
-```
-cargo watch -x "test"
-cargo watch -x "test query -- --nocapture"
-cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocapture"
-```
-
-# Responses
-```
-200 - { valid: true, verfication_id: 5 }
-417 Expectation failed - Either is not member of board or data was incomplete
-501 "Server down"
-```
-
-# DB
-```
-sqlite3 /home/www/.local/share/kyb/kyb.db
 ```
 
 # Curl

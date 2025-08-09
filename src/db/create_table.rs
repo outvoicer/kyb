@@ -21,7 +21,8 @@ pub async fn create_table(conn: &Connection) -> Result<(), KybError> {
             name TEXT NOT NULL,
             personal_code TEXT NOT NULL,
             decition INTEGER NOT NULL CHECK (decition IN (0, 1)),
-            time TEXT NOT NULL
+            time TEXT NOT NULL,
+            error TEXT
         )",
         [],
     )

@@ -8,14 +8,16 @@ pub async fn handle_lv(query: web::Json<Query>) -> impl Responder {
     match get_db() {
         Ok(conn) => match validate_and_verify(&conn, &query).await {
             Ok(_) => {
-                let new_id = log(&conn, &query, true).unwrap();
+                let new_id = log(&conn, &query, true, None).unwrap();
                 HttpResponse::Ok()
                     .json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
             }
             Err(err) => match err {
                 KybError::StringError(err) => {
                     let e = format!("{:?}", err);
-                    HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": e }))
+                    let error_id = log(&conn, &query, true, Some(&e)).unwrap();
+                    HttpResponse::ExpectationFailed()
+                        .json(serde_json::json!({ "error": e, "error_id": error_id }))
                 }
                 _ => {
                     eprintln!("{:?}", err);
