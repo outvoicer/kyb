@@ -14,8 +14,8 @@ pub fn log(
         None => "",
     };
     conn.execute(
-        "INSERT INTO log (name, personal_code, reg_code, decition, error, time) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-        params![&query.name, &query.personal_code, query.reg_code, decition, err, now.to_string()],
+        "INSERT INTO log (decition, name, personal_code, reg_code, error, time) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        params![decition, &query.name, &query.personal_code, query.reg_code, err, now.to_string()],
     )?;
     let last_id = conn.last_insert_rowid();
     Ok(last_id)
