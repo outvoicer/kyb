@@ -9,11 +9,11 @@ pub async fn start_kyb_server() {
     let server_handle = spawn(start_server());
     // AWAIT FOR SERVER
     match server_handle.await {
-        Ok(_) => {
-            println!("Server closed");
+        Ok(message) => {
+            println!("Server closed {:?}", message);
         }
         Err(err) => {
-            eprintln!("{:?}", err);
+            eprintln!("Server error: {:?}", err);
         }
     };
 }
