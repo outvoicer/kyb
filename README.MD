@@ -1,34 +1,56 @@
 KYB server to determine Latvian members of boards.
 
-Send person name (order: lastname + firstname), personal id and company registration code.
-Receive confirmation, that this person is on the member of board of organisation.
+Send person name, personal id and company registration code.
+Receive confirmation, when this person is a member of board.
 
 Updates itself every night for Latvian Open Data portal.
 
-Logs server results.
+Logs verification results and errors.
 
 # Source
 https://dati.ur.gov.lv/officers/officers.csv
 
 # Considerations:
-+ Every role in the CSV is considered as a positive match (Also Liqvidators and others)
-+ Name has to be exact match (Bērziņš Jānis, not Berzins Janis)
-+ Reg code has to be exact match
++ Person name order is lastname + firstname.
++ Person name has to be exact match (Bērziņš Jānis, not Berzins Janis)
++ Reg code has to be exact match and 11 characters (cannot have LV in beginning).
++ Every role in the CSV is considered as a positive match (Also Liqvidators and empty)
 + If CSV entry has personal code, then personal code is matched.
-+ If entry does not have personal code in db (like foreign owners), then personal code is not used for validation.
-+ Compay reg code has to be 11 characters
++ If CSV entry does not have personal code in db (like foreign owners), then personal code is not used for validation.
 
 # Run
 ```
 cargo run
-Runs at 127.0.0.1:10001
+Runs by default at 127.0.0.1:10001
 ```
 
 # Install DB
 ```
-./kyb install
-or
 cargo run install
+or
+./kyb install
+```
+
+# Try
+```
+curl -X POST http://127.0.0.1:10001/lv \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
+```
+
+# Response
+```
+200 - { valid: true, verfication_id: 5 }
+417 - Expectation failed - Either is not member of board or data was incomplete
+501 - "Server down"
+Empty response - I have used .unwrap()
+
+```
+
+# Config
+```
+/src/config.rs
+here you can set server address + port and schedule db update time.
 ```
 
 # Build
@@ -41,14 +63,6 @@ cargo build --release
 cargo watch -x "test"
 cargo watch -x "test query -- --nocapture"
 cargo watch -x "test test_two_janises -- --nocapture"
-```
-
-# Responses
-```
-200 - { valid: true, verfication_id: 5 }
-417 Expectation failed - Either is not member of board or data was incomplete
-501 "Server down"
-
 ```
 
 # DB
