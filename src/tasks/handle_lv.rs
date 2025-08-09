@@ -2,32 +2,22 @@ use crate::db::query::Query;
 use crate::db::{get_db::get_db, log::log};
 use crate::error::KybError;
 use crate::verify::validate_and_verify::validate_and_verify;
-use actix_web::{HttpResponse, Responder, web};
+use actix_web::web;
 
-pub async fn handle_lv(query: web::Json<Query>) -> impl Responder {
-    match get_db() {
-        Ok(conn) => match validate_and_verify(&conn, &query).await {
-            Ok(_) => {
-                // ERROR HANDLE SEE UNWRAP - ANNAB EMPTY REPLY KUI DB-D EI OLE
-                let new_id = log(&conn, &query, true, None).unwrap();
-                HttpResponse::Ok()
-                    .json(serde_json::json!({ "valid": true, "verfication_id": new_id }))
+pub async fn handle_lv(query: web::Json<Query>) -> Result<i64, KybError> {
+    let db = get_db()?;
+    match validate_and_verify(&db, &query).await {
+        Ok(_) => {
+            // ERROR HANDLE SEE UNWRAP - ANNAB EMPTY REPLY KUI DB-D EI OLE
+            let new_id = log(&db, &query, true, None).unwrap();
+            Ok(new_id)
+        }
+        Err(err) => match err {
+            KybError::StringError(err) => Err(KybError::StringError(err)),
+            _ => {
+                eprintln!("{:?}", err);
+                Err(KybError::StringError("Server down".to_string()))
             }
-            Err(err) => match err {
-                KybError::StringError(err) => {
-                    let e = format!("{:?}", err);
-                    let error_id = log(&conn, &query, true, Some(&e)).unwrap();
-                    println!("{}", &error_id);
-                    HttpResponse::ExpectationFailed()
-                        .json(serde_json::json!({ "error": e, "error_id": error_id }))
-                }
-                _ => {
-                    eprintln!("{:?}", err);
-                    HttpResponse::InternalServerError()
-                        .json(serde_json::json!({ "error": "Server down" }))
-                }
-            },
         },
-        Err(err) => HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": "No db" })),
     }
 }
