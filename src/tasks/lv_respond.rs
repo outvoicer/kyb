@@ -14,7 +14,7 @@ pub async fn lv_respond(query: web::Json<Query>) -> impl Responder {
                 HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err }))
             }
             _ => {
-                eprintln!("{:?}", err);
+                eprintln!("server down: {:?}", &err);
                 HttpResponse::InternalServerError()
                     .json(serde_json::json!({ "error": "Server down" }))
             }

@@ -52,7 +52,8 @@ cargo watch -x "test test_two_janises -- --nocapture"
 # DB
 ```
 sqlite3 /home/www/.local/share/kyb/kyb.db
-sqlite3 /Users/martin/Library/Application\ Support/kyb/kyb.db```
+sqlite3 /Users/martin/Library/Application\ Support/kyb/kyb.db
+```
 
 # Deploy
 ```
