@@ -57,7 +57,7 @@ cargo watch -x "test test_joonas_without_personal_code_in_db_is_valid -- --nocap
 
 # DB
 ```
-sqlite3 /home/www/.local/share/kyb_server
+sqlite3 /home/www/.local/share/kyb/kyb.db
 ```
 
 # Curl
@@ -71,16 +71,6 @@ curl -X POST http://127.0.0.1:10001/lv \
 
  curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
 
- curl -X POST https://in.costpocket.com:10002/lv \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
-
- curl -X POST http://167.172.176.176:10001/lv \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv
-
-
-
- curl -X POST https://in.costpocket.com:2095/lv \
+ curl -X POST https://kyb.costpocket.com/lv \
      -H "Content-Type: application/json" \
      -d '{"name": "Marots Jānis", "personal_code": "191282-*****", "reg_code": "40203278421"}' -vvv

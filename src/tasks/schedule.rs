@@ -1,3 +1,4 @@
+use crate::config::KybConfig;
 use crate::db::get_new_data::fetch_and_store_data;
 use chrono::{Local, Timelike};
 use tokio::time::{Duration, Instant, sleep_until};
@@ -6,9 +7,9 @@ pub async fn schedule_update() {
     loop {
         let now = Local::now();
         let next_run = now
-            .with_hour(02)
+            .with_hour(KybConfig::UPDATE_HOUR)
             .unwrap()
-            .with_minute(0)
+            .with_minute(KybConfig::UPDATE_MINUTE)
             .unwrap()
             .with_second(0)
             .unwrap();

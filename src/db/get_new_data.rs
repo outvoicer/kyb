@@ -1,3 +1,4 @@
+use crate::config::KybConfig;
 use crate::db::Officer;
 use crate::db::create_table::create_table;
 use crate::db::get_db::get_db;
@@ -14,7 +15,7 @@ fn print(text: &str) {
 
 pub async fn fetch_and_store_data() -> Result<(), Box<dyn Error>> {
     print("Get new data");
-    let url = "https://dati.ur.gov.lv/officers/officers.csv";
+    let url = KybConfig::SOURCE_CSV;
     let response = get(url).await?.text().await?;
     let cursor = Cursor::new(response);
 
