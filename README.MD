@@ -1,4 +1,4 @@
-KYB server to determine Latvian members of boards.
+Server to determine Latvian members of boards.
 
 Send person name, personal id and company registration code.
 Receive confirmation, when this person is a member of board.
