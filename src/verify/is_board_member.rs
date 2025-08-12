@@ -6,7 +6,10 @@ pub async fn is_board_member(conn: &Connection, query: &Query) -> Result<(), Kyb
     let mut stmt =
         conn.prepare("SELECT personal_code FROM officers WHERE name = ?1 AND reg_code = ?2")?;
 
-    let mut rows = stmt.query(params![query.name, query.reg_code])?;
+    let trimmed_name = query.name.trim();
+
+    let mut rows = stmt.query(params![trimmed_name, query.reg_code])?;
+
     let personal_code_beginning = &query.personal_code[0..6];
 
     while let Some(row) = rows.next()? {
