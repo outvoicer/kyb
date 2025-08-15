@@ -1,34 +1,4 @@
+pub mod company;
 pub mod get_new_company_data;
+pub mod import;
 pub mod input_company;
-
-#[allow(dead_code)]
-#[derive(Debug, serde::Deserialize)]
-/// schema for company register
-struct Company {
-    reg_code: String,
-    name: String,
-    address: String,
-    zip: String,
-    legal_form: String,
-    closed: String, // bool
-}
-
-impl Company {
-    pub fn new(
-        name: String,
-        reg_code: String,
-        address: String,
-        zip: String,
-        legal_form: String,
-        closed: String,
-    ) -> Self {
-        Self {
-            name: name,
-            reg_code: reg_code,
-            address: address,
-            zip: zip,
-            legal_form: legal_form,
-            closed: closed,
-        }
-    }
-}

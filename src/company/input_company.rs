@@ -8,7 +8,7 @@ pub struct InputCompany {
     name_before_quotes: String,
     pub name_in_quotes: String, //
     name_after_quotes: String,
-    without_quotes: u8,
+    without_quotes: Option<u8>,
     regtype: String,
     pub regtype_text: String,
     pub r#type: Option<String>,
@@ -20,7 +20,7 @@ pub struct InputCompany {
     pub index: Option<u32>,
     addressid: u64,
     region: u64,
-    city: u32,
+    city: Option<u32>,
     atvk: String,
     reregistration_term: Option<String>,
 }
