@@ -15,6 +15,20 @@ pub async fn create_table(conn: &Connection) -> Result<(), KybError> {
     .unwrap();
 
     conn.execute(
+        "CREATE TABLE IF NOT EXISTS company (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reg_code TEXT NOT NULL,
+            name TEXT NOT NULL,
+            address TEXT,
+            zip TEXT,
+            legal_form TEXT,
+            closed TEXT
+        )",
+        [],
+    )
+    .unwrap();
+
+    conn.execute(
         "CREATE TABLE IF NOT EXISTS log (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             decition INTEGER NOT NULL CHECK (decition IN (0, 1)),

@@ -1,3 +1,4 @@
+mod company;
 mod config;
 mod db;
 mod error;
