@@ -124,3 +124,4 @@ Company::create_table(conn)
 
 # Considerations - Company registry
 There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.
+Address with 4 commas is covered.

@@ -1,6 +1,7 @@
 use crate::company::company::Company;
 use crate::company::input_company::InputCompany;
 use crate::company::notmalize::normalize_string;
+use crate::company::parse_address::parse_address;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
@@ -20,23 +21,22 @@ pub async fn import_companies_from_csv(
 
     {
         let mut stmt = transaction.prepare(
-                "INSERT INTO company (reg_code, name, normal_name, address, zip, legal_form) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+                "INSERT INTO company (reg_code, name, normal_name, city, address, zip, legal_form) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
             // ADD COMPANY IF COMPANY IS NOT CLOSED
             let company_is_open = input_company.closed != "L".to_string();
             if company_is_open {
-                let mut name = input_company.name_in_quotes;
-                if name == "" {
-                    name = input_company.name;
-                }
-                let normal_name = normalize_string(&name);
+                let (name, normal_name) =
+                    get_name_and_normal_name(input_company.name_in_quotes, input_company.name);
+                let (city, address) = get_city_and_address(input_company.address);
                 stmt.execute(params![
                     input_company.regcode,
                     name,
                     normal_name,
-                    input_company.address,
+                    city,
+                    address,
                     input_company.index,
                     input_company.regtype_text,
                 ])?;
@@ -47,6 +47,29 @@ pub async fn import_companies_from_csv(
     transaction.commit()?;
 
     Ok(())
+}
+
+pub fn get_city_and_address(input_address: Option<String>) -> (Option<String>, Option<String>) {
+    let mut city = None;
+    let mut address = None;
+    match input_address {
+        Some(input_address) => {
+            let (c, a) = parse_address(&input_address);
+            city = Some(c);
+            address = Some(a);
+        }
+        None => {}
+    }
+    (city, address)
+}
+
+pub fn get_name_and_normal_name(name_1: String, name_2: String) -> (String, String) {
+    let mut name = name_1;
+    if name == "" {
+        name = name_2;
+    }
+    let normal_name = normalize_string(&name);
+    (name, normal_name)
 }
 
 #[cfg(test)]

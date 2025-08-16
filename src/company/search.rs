@@ -10,7 +10,7 @@ impl Company {
         name: &String,
     ) -> Result<Vec<Company>, Box<dyn Error>> {
         let mut stmt = conn.prepare(
-            "SELECT name, reg_code, address, zip, legal_form FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
+            "SELECT name, reg_code, city, address, zip, legal_form FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
         )?;
         let normalized_name = normalize_string(name);
         let rows = stmt.query(params![normalized_name])?;
@@ -37,10 +37,14 @@ mod tests {
             "40203572370".to_string(),
             "Wrong seartch result."
         );
+        assert_eq!(result.city, Some("Jūrmala".to_string()));
+        assert_eq!(result.address, Some("Mellužu prospekts 76".to_string()));
         // ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE
         let search_term_0 = "ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE".to_string();
         let result = get_first_result(&conn, &search_term_0).await.unwrap();
-        assert_eq!(result.reg_code, reg_code, "Wrong search result.");
+        assert_eq!(result.reg_code, reg_code);
+        assert_eq!(result.city, Some("Rēzekne".to_string()));
+        assert_eq!(result.address, Some("Latgales iela 88".to_string()));
         // KATOĻU
         let search_term_1 = "KATOĻU".to_string();
         let result = get_first_result(&conn, &search_term_1).await.unwrap();

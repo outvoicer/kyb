@@ -1,28 +1,8 @@
 pub fn parse_address(address: &String) -> (String, String) {
-    let address_data: Vec<String> = address.split(',').map(|s| s.to_string()).collect();
-    match address_data.len() {
-        2 => {
-            let city = format!("{}", address_data[0].trim());
-            let address = format!("{}", address_data[1].trim());
-            (city, address)
-        }
-        3 => {
-            let city = format!("{}", address_data[0].trim());
-            let address = format!("{}, {}", address_data[1].trim(), address_data[2].trim());
-            (city, address)
-        }
-        4 => {
-            let city = format!("{}", address_data[0].trim());
-            let address = format!(
-                "{}, {}, {}",
-                address_data[1].trim(),
-                address_data[2].trim(),
-                address_data[3].trim()
-            );
-            (city, address)
-        }
-        _ => panic!("uncovered {}", address_data.len()),
-    }
+    let mut address_data: Vec<&str> = address.split(',').map(str::trim).collect();
+    let city = address_data.get(0).unwrap_or(&"").to_string();
+    let address = address_data.drain(1..).collect::<Vec<&str>>().join(", ");
+    (city, address)
 }
 
 #[cfg(test)]
