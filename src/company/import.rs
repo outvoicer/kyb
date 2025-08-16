@@ -23,6 +23,7 @@ pub async fn import_companies_from_csv(
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
+            // ADD COMPANY IF COMPANY IS NOT CLOSED
             if input_company.closed != "L".to_string() {
                 stmt.execute(params![
                     input_company.regcode,
@@ -50,7 +51,6 @@ mod tests {
     async fn company_import_from_sample() {
         let search_term_1 = "House of Glory".to_string();
         let reg_code_1 = "40008234596".to_string();
-        let search_term_2 = "VALKRĪG".to_string();
 
         let conn = create_test_db().await.unwrap();
         // THIS SEARCH SHOULD FIND
@@ -61,6 +61,7 @@ mod tests {
         );
         // THIS SEARCH SHOULD NOT FIND
         // DO NOT GET "VALKRĪG" (44102037886) AS IT'S DELETED
+        let search_term_2 = "VALKRĪG".to_string();
         match get_first_result(&conn, &search_term_2).await {
             Ok(_) => {
                 assert!(false, "First result should not appear");
