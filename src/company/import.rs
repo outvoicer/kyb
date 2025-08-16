@@ -38,7 +38,7 @@ pub async fn import_companies_from_csv(
                     city,
                     address,
                     input_company.index,
-                    input_company.regtype_text,
+                    input_company.r#type,
                 ])?;
             }
         }

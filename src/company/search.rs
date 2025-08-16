@@ -39,12 +39,14 @@ mod tests {
         );
         assert_eq!(result.city, Some("Jūrmala".to_string()));
         assert_eq!(result.address, Some("Mellužu prospekts 76".to_string()));
+        assert_eq!(result.legal_form, "SIA".to_string());
         // ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE
         let search_term_0 = "ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE".to_string();
         let result = get_first_result(&conn, &search_term_0).await.unwrap();
         assert_eq!(result.reg_code, reg_code);
         assert_eq!(result.city, Some("Rēzekne".to_string()));
         assert_eq!(result.address, Some("Latgales iela 88".to_string()));
+        assert_eq!(result.legal_form, "KAT".to_string());
         // KATOĻU
         let search_term_1 = "KATOĻU".to_string();
         let result = get_first_result(&conn, &search_term_1).await.unwrap();
@@ -73,5 +75,9 @@ mod tests {
         let search_term_7 = "not existing".to_string();
         let result = get_first_result(&conn, &search_term_7).await;
         assert!(result.is_err(), "Should have not found.");
+        // IS SIA
+        let search_term_8 = "Groglass".to_string();
+        let result = get_first_result(&conn, &search_term_8).await.unwrap();
+        assert_eq!(result.legal_form, "SIA".to_string());
     }
 }
