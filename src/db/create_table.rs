@@ -20,7 +20,7 @@ pub async fn create_table(conn: &Connection) -> Result<(), KybError> {
             reg_code TEXT NOT NULL,
             name TEXT NOT NULL,
             address TEXT,
-            zip TEXT,
+            zip INTEGER,
             legal_form TEXT,
             closed TEXT
         )",

@@ -11,7 +11,7 @@ pub struct InputCompany {
     without_quotes: Option<u8>,
     regtype: String,
     pub regtype_text: String,
-    pub r#type: Option<String>,
+    r#type: Option<String>,
     type_text: String,           //
     registered: String,          // NaiveDate,
     terminated: String,          // Option<NaiveDate>

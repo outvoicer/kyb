@@ -8,6 +8,7 @@ use std::io::Cursor;
 
 pub async fn fetch_new_company_data() -> Result<(), Box<dyn Error>> {
     let url = KybConfig::SOURCE_COMPANIES;
+    println!("getting {}", url);
     let response = get(url).await?.text().await?;
     let cursor = Cursor::new(response);
 
