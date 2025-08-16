@@ -6,7 +6,6 @@ pub struct Company {
     pub address: Option<String>,
     pub zip: Option<u32>,
     pub legal_form: String,
-    pub closed: Option<String>, // bool
 }
 
 impl Company {
@@ -16,7 +15,6 @@ impl Company {
         address: String,
         zip: u32,
         legal_form: String,
-        closed: String,
     ) -> Self {
         Self {
             name: name,
@@ -24,7 +22,6 @@ impl Company {
             address: Some(address),
             zip: Some(zip),
             legal_form: legal_form,
-            closed: Some(closed),
         }
     }
 }

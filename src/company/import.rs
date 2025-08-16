@@ -19,18 +19,19 @@ pub async fn import_companies_from_csv(
 
     {
         let mut stmt = transaction.prepare(
-                "INSERT INTO company (reg_code, name, address, zip, legal_form, closed) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+                "INSERT INTO company (reg_code, name, address, zip, legal_form) VALUES (?1, ?2, ?3, ?4, ?5)",
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
-            stmt.execute(params![
-                input_company.regcode,
-                input_company.name_in_quotes,
-                input_company.address,
-                input_company.index,
-                input_company.regtype_text,
-                input_company.closed,
-            ])?;
+            if input_company.closed != "L".to_string() {
+                stmt.execute(params![
+                    input_company.regcode,
+                    input_company.name_in_quotes,
+                    input_company.address,
+                    input_company.index,
+                    input_company.regtype_text,
+                ])?;
+            }
         }
     }
 
@@ -49,7 +50,6 @@ mod tests {
     use rusqlite::Connection;
     use std::error::Error;
     use std::fs::File;
-    use std::io;
     use std::io::{Cursor, Read};
 
     async fn get_first_result(
@@ -76,7 +76,7 @@ mod tests {
 
     #[test]
     async fn company_import_from_sample() {
-        let search_term_1 = "KRASTNIEKI".to_string();
+        let search_term_1 = "House of Glory".to_string();
         let search_term_2 = "VALKRĪG".to_string();
 
         let mut conn = Connection::open_in_memory().unwrap();
@@ -90,42 +90,29 @@ mod tests {
         let rdr = csv::ReaderBuilder::new()
             .delimiter(b';')
             .from_reader(cursor);
-
-        match import_companies_from_csv(&mut conn, rdr).await {
+        // SAVE DATA
+        let _ = import_companies_from_csv(&mut conn, rdr).await.unwrap();
+        // THIS SEARCH SHOULD FIND
+        let first_result = get_first_result(&conn, &search_term_1).await.unwrap();
+        let reg_code: String = "40008234596".to_string();
+        assert_eq!(
+            first_result.reg_code, reg_code,
+            "The registration code does not match the expected value."
+        );
+        // THIS SEARCH SHOULD NOT FIND
+        // DO NOT GET "VALKRĪG" (44102037886) AS IT'S DELETED
+        match get_first_result(&conn, &search_term_2).await {
             Ok(_) => {
-                assert!(true);
-                match get_first_result(&conn, &search_term_1).await {
-                    Ok(first_result) => {
-                        let reg_code: String = "41202013815".to_string();
-                        assert_eq!(
-                            first_result.reg_code, reg_code,
-                            "The registration code does not match the expected value."
-                        );
-                    }
-                    Err(err) => {
-                        eprintln!("{}", err);
-                        assert!(false, "Search did not respond correctly")
-                    }
-                }
-                // DO NOT GET "VALKRĪG" (44102037886) AS IT'S DELETED
-                match get_first_result(&conn, &search_term_2).await {
-                    Ok(_) => {
-                        assert!(false, "First result should not appear");
-                    }
-                    Err(err) => {
-                        if let Some(err) = err.downcast_ref::<io::Error>() {
-                            assert_eq!(err.kind(), io::ErrorKind::Other);
-                            assert_eq!(err.to_string(), "No company found");
-                        } else {
-                            panic!("Expected an io::Error");
-                        }
-                    }
-                }
+                assert!(false, "First result should not appear");
             }
             Err(err) => {
-                eprintln!("{}", err);
-                assert!(false, "company importing error")
+                if let Some(err) = err.downcast_ref::<std::io::Error>() {
+                    assert_eq!(err.kind(), std::io::ErrorKind::Other);
+                    assert_eq!(err.to_string(), "No company found");
+                } else {
+                    panic!("Expected company not found");
+                }
             }
-        };
+        }
     }
 }
