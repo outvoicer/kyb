@@ -101,9 +101,6 @@ curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{
 
  curl -X POST https://kyb.outvoicer.com/lv -H "Content-Type: application/json" -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
 
-# Considerations - Company registry
-There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.
-
 # Misc
 ```
 All companies in Latvia:
@@ -115,5 +112,15 @@ curl https://dati.ur.gov.lv/register/ppi_public_persons_institutions.csv
 VAT payers:
 curl https://data.gov.lv/dati/dataset/9a5eae1c-2438-48cf-854b-6a2c170f918f/resource/610910e9-e086-4c5b-a7ea-0a896a697672/download/pdb_pvnmaksataji_odata.csv
 
+```
+
+# Company
+```
+Company::search_by_name(&Connection, &String)
+Company::create_table(conn)
 
 ```
+
+
+# Considerations - Company registry
+There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.

@@ -4,19 +4,19 @@ use crate::company::search_map_results::search_map_results;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
 
-pub async fn search_by_name(
-    conn: &Connection,
-    name: &String,
-) -> Result<Vec<Company>, Box<dyn Error>> {
-    let normalized_name = normalize_string(name);
-
-    let mut stmt = conn.prepare(
-        "SELECT name, reg_code, address, zip, legal_form FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
-    )?;
-
-    let rows = stmt.query(params![normalized_name])?;
-    let search_results = search_map_results(rows).await?;
-    Ok(search_results)
+impl Company {
+    pub async fn search_by_name(
+        conn: &Connection,
+        name: &String,
+    ) -> Result<Vec<Company>, Box<dyn Error>> {
+        let mut stmt = conn.prepare(
+            "SELECT name, reg_code, address, zip, legal_form FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
+        )?;
+        let normalized_name = normalize_string(name);
+        let rows = stmt.query(params![normalized_name])?;
+        let search_results = search_map_results(rows).await?;
+        Ok(search_results)
+    }
 }
 
 #[cfg(test)]
@@ -56,14 +56,18 @@ mod tests {
         // KATOĻU BAZNĪCAS RĒZEKNES
         let search_term_4 = "KATOĻU BAZNĪCAS RĒZEKNES".to_string();
         let result = get_first_result(&conn, &search_term_4).await.unwrap();
-        assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
+        assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // KATOĻU
         let search_term_5 = "KATOĻU".to_string();
         let result = get_first_result(&conn, &search_term_5).await.unwrap();
-        assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
+        assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // DIECĒZE
         let search_term_6 = "DIECĒZE".to_string();
         let result = get_first_result(&conn, &search_term_6).await.unwrap();
-        assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
+        assert_eq!(result.reg_code, reg_code, "Wrong search result.");
+        // not existing
+        let search_term_7 = "not existing".to_string();
+        let result = get_first_result(&conn, &search_term_7).await;
+        assert!(result.is_err(), "Should have not found.");
     }
 }
