@@ -57,5 +57,13 @@ mod tests {
         let search_term_4 = "KATOĻU BAZNĪCAS RĒZEKNES".to_string();
         let result = get_first_result(&conn, &search_term_4).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
+        // KATOĻU
+        let search_term_5 = "KATOĻU".to_string();
+        let result = get_first_result(&conn, &search_term_5).await.unwrap();
+        assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
+        // DIECĒZE
+        let search_term_6 = "DIECĒZE".to_string();
+        let result = get_first_result(&conn, &search_term_6).await.unwrap();
+        assert_eq!(result.reg_code, reg_code, "Wrong seartch result.");
     }
 }
