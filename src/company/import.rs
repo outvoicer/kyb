@@ -42,61 +42,21 @@ pub async fn import_companies_from_csv(
 
 #[cfg(test)]
 mod tests {
-    use crate::company::company::Company;
-    use crate::company::import::import_companies_from_csv;
-    use crate::company::search::search_by_name;
-    use crate::db::create_table::create_table;
+    use crate::company::create_test_db::create_test_db;
+    use crate::company::get_first_result::get_first_result;
     use actix_web::test;
-    use rusqlite::Connection;
-    use std::error::Error;
-    use std::fs::File;
-    use std::io::{Cursor, Read};
-
-    async fn get_first_result(
-        conn: &Connection,
-        search_term: &String,
-    ) -> Result<Company, Box<dyn Error>> {
-        match search_by_name(&conn, &search_term).await {
-            Ok(companies) => {
-                if let Some(first_company) = companies.first() {
-                    return Ok(first_company.clone());
-                } else {
-                    let err: Box<dyn Error> = Box::new(std::io::Error::new(
-                        std::io::ErrorKind::Other,
-                        "No company found",
-                    ));
-                    return Err(err);
-                }
-            }
-            Err(e) => {
-                return Err(e);
-            }
-        }
-    }
 
     #[test]
     async fn company_import_from_sample() {
         let search_term_1 = "House of Glory".to_string();
+        let reg_code_1 = "40008234596".to_string();
         let search_term_2 = "VALKRĪG".to_string();
 
-        let mut conn = Connection::open_in_memory().unwrap();
-        let _ = create_table(&conn).await;
-        let path = "./src/company/company.csv";
-        let mut file = File::open(path).unwrap();
-        let mut contents = String::new();
-        let _ = file.read_to_string(&mut contents);
-        let cursor = Cursor::new(contents);
-
-        let rdr = csv::ReaderBuilder::new()
-            .delimiter(b';')
-            .from_reader(cursor);
-        // SAVE DATA
-        let _ = import_companies_from_csv(&mut conn, rdr).await.unwrap();
+        let conn = create_test_db().await.unwrap();
         // THIS SEARCH SHOULD FIND
         let first_result = get_first_result(&conn, &search_term_1).await.unwrap();
-        let reg_code: String = "40008234596".to_string();
         assert_eq!(
-            first_result.reg_code, reg_code,
+            first_result.reg_code, reg_code_1,
             "The registration code does not match the expected value."
         );
         // THIS SEARCH SHOULD NOT FIND
