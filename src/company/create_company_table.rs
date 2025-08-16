@@ -9,6 +9,7 @@ impl Company {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 reg_code TEXT NOT NULL,
                 name TEXT NOT NULL,
+                normal_name TEXT NOT NULL,
                 address TEXT,
                 zip INTEGER,
                 legal_form TEXT

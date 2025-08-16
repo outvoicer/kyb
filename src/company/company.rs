@@ -16,8 +16,10 @@ impl Company {
         zip: u32,
         legal_form: String,
     ) -> Self {
+        //    let normal_name = name.clone();
         Self {
             name: name,
+            //     normal_name: normal_name,
             reg_code: reg_code,
             address: Some(address),
             zip: Some(zip),

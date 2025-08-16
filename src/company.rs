@@ -5,5 +5,6 @@ pub mod get_first_result;
 pub mod get_new_company_data;
 pub mod import;
 pub mod input_company;
+pub mod notmalize;
 pub mod search;
 pub mod search_map_results;

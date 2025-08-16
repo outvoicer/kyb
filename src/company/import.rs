@@ -1,5 +1,6 @@
 use crate::company::company::Company;
 use crate::company::input_company::InputCompany;
+use crate::company::notmalize::normalize_string;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
@@ -19,15 +20,22 @@ pub async fn import_companies_from_csv(
 
     {
         let mut stmt = transaction.prepare(
-                "INSERT INTO company (reg_code, name, address, zip, legal_form) VALUES (?1, ?2, ?3, ?4, ?5)",
+                "INSERT INTO company (reg_code, name, normal_name, address, zip, legal_form) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
             // ADD COMPANY IF COMPANY IS NOT CLOSED
-            if input_company.closed != "L".to_string() {
+            let company_is_open = input_company.closed != "L".to_string();
+            if company_is_open {
+                let mut name = input_company.name_in_quotes;
+                if name == "" {
+                    name = input_company.name;
+                }
+                let normal_name = normalize_string(&name);
                 stmt.execute(params![
                     input_company.regcode,
-                    input_company.name_in_quotes,
+                    name,
+                    normal_name,
                     input_company.address,
                     input_company.index,
                     input_company.regtype_text,
