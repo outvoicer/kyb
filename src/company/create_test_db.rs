@@ -1,5 +1,5 @@
+use crate::company::company::Company;
 use crate::company::import::import_companies_from_csv;
-use crate::db::create_table::create_table;
 use rusqlite::Connection;
 use std::error::Error;
 use std::fs::File;
@@ -7,7 +7,9 @@ use std::io::{Cursor, Read};
 
 pub async fn create_test_db() -> Result<Connection, Box<dyn Error>> {
     let mut conn = Connection::open_in_memory()?;
-    let _ = create_table(&conn).await?;
+    //let _ = create_table(&conn).await?;
+    Company::create_table(&conn).await?;
+
     let path = "./src/company/company.csv";
     let mut file = File::open(path)?;
     let mut contents = String::new();

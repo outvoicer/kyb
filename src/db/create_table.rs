@@ -1,3 +1,4 @@
+use crate::company::company::Company;
 use crate::error::KybError;
 use rusqlite::{Connection, Result};
 
@@ -14,32 +15,7 @@ pub async fn create_table(conn: &Connection) -> Result<(), KybError> {
     )
     .unwrap();
 
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS company (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            reg_code TEXT NOT NULL,
-            name TEXT NOT NULL,
-            address TEXT,
-            zip INTEGER,
-            legal_form TEXT
-        )",
-        [],
-    )
-    .unwrap();
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS log (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            decition INTEGER NOT NULL CHECK (decition IN (0, 1)),
-            reg_code TEXT NOT NULL,
-            name TEXT NOT NULL,
-            personal_code TEXT NOT NULL,
-            time TEXT NOT NULL,
-            error TEXT
-        )",
-        [],
-    )
-    .unwrap();
+    Company::create_table(&conn).await.unwrap();
 
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_officers_name_reg_code ON officers (name, reg_code)",

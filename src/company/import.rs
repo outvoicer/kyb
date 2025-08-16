@@ -1,5 +1,5 @@
+use crate::company::company::Company;
 use crate::company::input_company::InputCompany;
-use crate::db::create_table::create_table;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
@@ -10,7 +10,7 @@ pub async fn import_companies_from_csv(
     mut rdr: Reader<Cursor<String>>,
 ) -> Result<(), Box<dyn Error>> {
     // CREATE TABLE, IF DOES NOT EXIST
-    create_table(&conn).await?;
+    Company::create_table(&conn).await?;
     // DELETE ALL EXISTING RECORDS
     conn.execute("DELETE FROM company", [])?;
 
