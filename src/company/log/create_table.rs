@@ -7,7 +7,8 @@ pub async fn create_company_log_table(conn: &Connection) -> Result<(), Box<dyn E
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 input TEXT,
                 search_name TEXT,
-                results TEXT
+                results TEXT,
+                error TEXT
             )",
         [],
     )?;

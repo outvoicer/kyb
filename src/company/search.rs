@@ -20,6 +20,7 @@ impl Company {
         let normalized_name = normalize_string(&clean_name.to_string());
         // IF NOTHING LEFT, RETURN EMPTY
         if normalized_name == "".to_string() {
+            log_search(conn, name, &normalized_name, &vec![], "".to_string()).await;
             return Ok(vec![]);
         }
         // QUERY
@@ -27,7 +28,14 @@ impl Company {
         // MAP RESUTS
         let search_results = search_map_results(rows).await?;
         // LOG RESULTS
-        log_search(conn, name, &normalized_name, &search_results).await;
+        log_search(
+            conn,
+            name,
+            &normalized_name,
+            &search_results,
+            "".to_string(),
+        )
+        .await;
         // RETURN
         Ok(search_results)
     }

@@ -7,6 +7,7 @@ pub async fn log_search(
     input: &String,
     search_name: &String,
     results: &Vec<Company>,
+    error: String,
 ) {
     let mut names: Vec<String> = Vec::new();
     for result in results {
@@ -14,13 +15,11 @@ pub async fn log_search(
     }
     let found_names = names.join(", ");
     let insert = conn.execute(
-        "INSERT INTO company_log (input, search_name, results) VALUES (?1, ?2, ?3)",
-        params![input, search_name, found_names],
+        "INSERT INTO company_log (input, search_name, results, error) VALUES (?1, ?2, ?3, ?4)",
+        params![input, search_name, found_names, error],
     );
     if insert.is_err() {
         eprintln!("search log error: {:?}", insert);
     }
-    // let last_id = conn.last_insert_rowid();
-    // Ok(last_id)
     ()
 }
