@@ -2,8 +2,8 @@
 pub fn clean_company_name(input_name: &str) -> &str {
     let prefix = "SIA ";
     if input_name.starts_with(prefix) {
-        &input_name[prefix.len()..]
+        &input_name[prefix.len()..].trim()
     } else {
-        input_name
+        input_name.trim()
     }
 }

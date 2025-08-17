@@ -1,4 +1,5 @@
 use crate::company::company::Company;
+use crate::company::log::create_table::create_company_log_table;
 use rusqlite::Connection;
 use std::error::Error;
 
@@ -21,6 +22,8 @@ impl Company {
             "CREATE INDEX IF NOT EXISTS idx_normal_name ON company (normal_name)",
             [],
         )?;
+
+        create_company_log_table(&conn).await?;
 
         Ok(())
     }

@@ -1,5 +1,6 @@
 use crate::company::clean_name::clean_company_name;
 use crate::company::company::Company;
+use crate::company::log::log::log_search;
 use crate::company::notmalize::normalize_string;
 use crate::company::search_map_results::search_map_results;
 use rusqlite::{Connection, Result, params};
@@ -21,6 +22,8 @@ impl Company {
         let rows = stmt.query(params![normalized_name])?;
         // MAP RESUTS
         let search_results = search_map_results(rows).await?;
+        // LOG RESULTS
+        log_search(conn, name, &normalized_name, &search_results).await;
         // RETURN
         Ok(search_results)
     }
