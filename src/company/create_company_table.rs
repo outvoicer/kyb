@@ -7,13 +7,13 @@ impl Company {
         conn.execute(
             "CREATE TABLE IF NOT EXISTS company (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                reg_code TEXT NOT NULL,
+                legal_form TEXT,
                 name TEXT NOT NULL,
-                normal_name TEXT NOT NULL,
                 city TEXT,
                 address TEXT,
                 zip INTEGER,
-                legal_form TEXT
+                normal_name TEXT NOT NULL,
+                reg_code TEXT NOT NULL
             )",
             [],
         )?;

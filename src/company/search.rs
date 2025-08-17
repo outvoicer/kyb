@@ -10,7 +10,7 @@ impl Company {
         name: &String,
     ) -> Result<Vec<Company>, Box<dyn Error>> {
         let mut stmt = conn.prepare(
-            "SELECT name, reg_code, city, address, zip, legal_form FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
+            "SELECT legal_form, name, city, address, zip, reg_code  FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
         )?;
         let normalized_name = normalize_string(name);
         let rows = stmt.query(params![normalized_name])?;
@@ -30,8 +30,8 @@ mod tests {
         let conn = create_test_db().await.unwrap();
         let reg_code = "90000519196".to_string();
         // Raimond fantastic
-        let search_term_minus_1 = "Raimond fantastic".to_string();
-        let result = get_first_result(&conn, &search_term_minus_1).await.unwrap();
+        let search_term = "Raimond fantastic".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(
             result.reg_code,
             "40203572370".to_string(),
@@ -41,43 +41,48 @@ mod tests {
         assert_eq!(result.address, Some("Mellužu prospekts 76".to_string()));
         assert_eq!(result.legal_form, "SIA".to_string());
         // ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE
-        let search_term_0 = "ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE".to_string();
-        let result = get_first_result(&conn, &search_term_0).await.unwrap();
+        let search_term = "ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code);
         assert_eq!(result.city, Some("Rēzekne".to_string()));
         assert_eq!(result.address, Some("Latgales iela 88".to_string()));
         assert_eq!(result.legal_form, "KAT".to_string());
         // KATOĻU
-        let search_term_1 = "KATOĻU".to_string();
-        let result = get_first_result(&conn, &search_term_1).await.unwrap();
+        let search_term = "KATOĻU".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // katolu
-        let search_term_2 = "katolu".to_string();
-        let result = get_first_result(&conn, &search_term_2).await.unwrap();
+        let search_term = "katolu".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // katoļu
-        let search_term_3 = "katoļu".to_string();
-        let result = get_first_result(&conn, &search_term_3).await.unwrap();
+        let search_term = "katoļu".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // KATOĻU BAZNĪCAS RĒZEKNES
-        let search_term_4 = "KATOĻU BAZNĪCAS RĒZEKNES".to_string();
-        let result = get_first_result(&conn, &search_term_4).await.unwrap();
+        let search_term = "KATOĻU BAZNĪCAS RĒZEKNES".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // KATOĻU
-        let search_term_5 = "KATOĻU".to_string();
-        let result = get_first_result(&conn, &search_term_5).await.unwrap();
+        let search_term = "KATOĻU".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // DIECĒZE
-        let search_term_6 = "DIECĒZE".to_string();
-        let result = get_first_result(&conn, &search_term_6).await.unwrap();
+        let search_term = "DIECĒZE".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, reg_code, "Wrong search result.");
         // not existing
-        let search_term_7 = "not existing".to_string();
-        let result = get_first_result(&conn, &search_term_7).await;
+        let search_term = "not existing".to_string();
+        let result = get_first_result(&conn, &search_term).await;
         assert!(result.is_err(), "Should have not found.");
         // IS SIA
-        let search_term_8 = "Groglass".to_string();
-        let result = get_first_result(&conn, &search_term_8).await.unwrap();
+        let search_term = "Groglass".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(result.legal_form, "SIA".to_string());
+        //HAS "-" IN NAME
+        let search_term = "Med-Sea".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(result.reg_code, "50103563161".to_string());
         assert_eq!(result.legal_form, "SIA".to_string());
     }
 }
