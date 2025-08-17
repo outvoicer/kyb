@@ -15,7 +15,6 @@ pub async fn lv_company_search_air(
     rt::spawn(async move {
         // receive messages from websocket
         while let Some(msg) = stream.next().await {
-            //let _ = one_lv_air_message(&mut session, msg).await;
             if let Err(e) = one_lv_air_message(&mut session, msg).await {
                 //return Err(e);
                 println!("LV air message error: {}", e);
