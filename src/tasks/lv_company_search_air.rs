@@ -1,94 +1,27 @@
-use crate::company::company::Company;
-use crate::error::KybError;
-use crate::tasks::lv_company_search_handle::CompanySearchQuery;
-use crate::tasks::lv_company_search_handle::lv_company_search_handle;
+use crate::tasks::one_lv_air_message::one_lv_air_message;
 use actix_web::{Error, HttpRequest, HttpResponse, rt, web};
-use actix_ws::AggregatedMessage;
-use actix_ws::Session;
 use futures_util::StreamExt as _;
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Serialize, Deserialize)]
-struct AirSearchResponse {
-    result: Option<Vec<Company>>,
-    error: Option<String>,
-}
-
-async fn send_message(session: &mut Session, input: AirSearchResponse) -> Result<(), KybError> {
-    let payload = serde_json::to_string(&input)?;
-    //session.text(payload).await;
-    if let Err(e) = &session.text(payload).await {
-        //return Err(e);
-        println!("send error: {}", e);
-    }
-    Ok(())
-}
 
 pub async fn lv_company_search_air(
     req: HttpRequest,
     stream: web::Payload,
 ) -> Result<HttpResponse, Error> {
     let (res, mut session, stream) = actix_ws::handle(&req, stream)?;
-
     let mut stream = stream
         .aggregate_continuations()
         // aggregate continuation frames up to 10 kb
         .max_continuation_size(10 * 1024);
-
     // start task but don't wait for it
     rt::spawn(async move {
         // receive messages from websocket
         while let Some(msg) = stream.next().await {
-            match msg {
-                Ok(AggregatedMessage::Text(bytes)) => {
-                    // SERIALIZE
-                    match serde_json::from_slice::<CompanySearchQuery>(&bytes.as_bytes()) {
-                        Ok(query) => {
-                            // SEARCH
-                            match lv_company_search_handle(query).await {
-                                Ok(result) => {
-                                    // STRINGIFY:
-                                    let respo = AirSearchResponse {
-                                        result: Some(result),
-                                        error: None,
-                                    };
-                                    let _ = send_message(&mut session, respo).await;
-                                }
-                                // I NEVER ERROR
-                                Err(_) => {}
-                            }
-                        }
-                        Err(e) => {
-                            // Deserialization failed
-                            println!("Failed to deserialize message: {:?}", e);
-
-                            let respo = AirSearchResponse {
-                                result: None,
-                                error: Some("Did not understand message".to_string()),
-                            };
-
-                            let _ = send_message(&mut session, respo).await;
-                        }
-                    }
-                }
-                /*
-                    Ok(AggregatedMessage::Binary(_bin)) => {
-                        // echo binary message
-                        if let Err(e) = session.text("Only text messages allowed").await {
-                            println!("Failed to send message: {:?}", e);
-                        }
-                    }
-                */
-                Ok(AggregatedMessage::Ping(msg)) => {
-                    // respond to PING frame with PONG frame
-                    session.pong(&msg).await.unwrap();
-                }
-
-                _ => {}
+            //let _ = one_lv_air_message(&mut session, msg).await;
+            if let Err(e) = one_lv_air_message(&mut session, msg).await {
+                //return Err(e);
+                println!("LV air message error: {}", e);
             }
         }
     });
-
     // respond immediately with response connected to WS session
     Ok(res)
 }

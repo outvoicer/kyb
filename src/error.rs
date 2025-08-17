@@ -21,4 +21,7 @@ pub enum KybError {
 
     #[error("Actix WS Closed error: {0:?}")]
     ActixWsClosedError(actix_ws::Closed),
+
+    #[error("Actix Web error: {0}")]
+    ActixWebError(#[from] actix_web::error::Error),
 }
