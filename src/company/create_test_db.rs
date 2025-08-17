@@ -1,12 +1,20 @@
 use crate::company::company::Company;
 use crate::company::import::import_companies_from_csv;
+use crate::db::get_db::Pool;
+use r2d2::PooledConnection;
+use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Connection;
 use std::error::Error;
 use std::fs::File;
 use std::io::{Cursor, Read};
 
-pub async fn create_test_db() -> Result<Connection, Box<dyn Error>> {
-    let mut conn = Connection::open_in_memory()?;
+pub async fn create_test_db() -> Result<Pool, Box<dyn Error>> {
+    let manager = SqliteConnectionManager::memory();
+    let pool = Pool::new(manager).unwrap();
+    let mut conn: PooledConnection<SqliteConnectionManager> =
+        pool.get().expect("Couldn't get db connection from pool");
+
+    // let mut conn = Connection::open_in_memory()?;
     // ADD TABLE SCHEMA
     Company::create_table(&conn).await?;
     // GET SAMPLE DATA
@@ -21,5 +29,6 @@ pub async fn create_test_db() -> Result<Connection, Box<dyn Error>> {
         .from_reader(cursor);
     // SAVE DATA
     let _ = import_companies_from_csv(&mut conn, rdr).await?;
-    Ok(conn)
+    //
+    Ok(pool)
 }

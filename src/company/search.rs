@@ -46,10 +46,15 @@ mod tests {
     use crate::company::create_test_db::create_test_db;
     use crate::company::get_first_result::get_first_result;
     use actix_web::test;
+    use r2d2::PooledConnection;
+    use r2d2_sqlite::SqliteConnectionManager;
 
     #[test]
     async fn name_search_lv_letters() {
-        let conn = create_test_db().await.unwrap();
+        let pool = create_test_db().await.unwrap();
+        let conn: PooledConnection<SqliteConnectionManager> =
+            pool.get().expect("Couldn't get db connection from pool");
+
         let reg_code = "90000519196".to_string();
 
         // Raimond fantastic

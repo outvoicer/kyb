@@ -13,6 +13,7 @@ pub async fn lv_company_search(
     let conn: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
 
+    println!("aaa{:?}", query);
     let company_query: CompanySearchQuery = query.into_inner();
     match lv_company_search_handle(&conn, company_query).await {
         Ok(results) => {
@@ -35,17 +36,25 @@ pub async fn lv_company_search(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::company::create_test_db::create_test_db;
     use actix_web::{App, test, web};
     use serde_json::json;
     use std::time::{Duration, Instant};
 
     // THIS ASSUMES DB IS INSTALLED
     #[actix_rt::test]
+
     async fn test_lv_company_search_success() {
+        // Create DB
+        let db = create_test_db().await.unwrap();
         // Arrange: Set up the test server and request payload
-        let mut app =
-            test::init_service(App::new().route("/lv/company", web::post().to(lv_company_search)))
-                .await;
+
+        let mut app = test::init_service(
+            App::new()
+                .app_data(web::Data::new(db))
+                .route("/lv/company", web::post().to(lv_company_search)),
+        )
+        .await;
 
         let request_payload = json!({
             "name": "Raimond fantastic"
@@ -71,18 +80,22 @@ mod tests {
         println!("{:?}", resp);
 
         // Assert: Check the response
-        //assert!(resp.status().is_success());
+        assert!(resp.status().is_success());
         let response_body: serde_json::Value = test::read_body_json(resp).await;
-        println!("{}", response_body);
         assert_eq!(response_body[0]["reg_code"], "40203572370");
     }
 
     #[actix_rt::test]
     async fn test_lv_company_search_failure() {
+        let db = create_test_db().await.unwrap();
+
         // Arrange: Set up the test server and request payload
-        let mut app =
-            test::init_service(App::new().route("/lv/company", web::post().to(lv_company_search)))
-                .await;
+        let mut app = test::init_service(
+            App::new()
+                .app_data(web::Data::new(db))
+                .route("/lv/company", web::post().to(lv_company_search)),
+        )
+        .await;
 
         let request_payload = json!({
             "name": ""

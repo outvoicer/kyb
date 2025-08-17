@@ -77,13 +77,18 @@ mod tests {
     use crate::company::create_test_db::create_test_db;
     use crate::company::get_first_result::get_first_result;
     use actix_web::test;
+    use r2d2::PooledConnection;
+    use r2d2_sqlite::SqliteConnectionManager;
 
     #[test]
     async fn company_import_from_sample() {
         let search_term_1 = "House of Glory".to_string();
         let reg_code_1 = "40008234596".to_string();
 
-        let conn = create_test_db().await.unwrap();
+        let pool = create_test_db().await.unwrap();
+        let conn: PooledConnection<SqliteConnectionManager> =
+            pool.get().expect("Couldn't get db connection from pool");
+
         // THIS SEARCH SHOULD FIND
         let first_result = get_first_result(&conn, &search_term_1).await.unwrap();
         assert_eq!(

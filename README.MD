@@ -126,5 +126,11 @@ curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/jso
 
 # Considerations - Company registry
 There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.
-
+search limit 10
 Search "", get []
+http: Errors are not returned, [] is returned
+longest name is 151 chars: "JURIDISKU SŪDZĪBU RAKSTĪŠANAS BIEDRĪBA, BIZNESA UN JURIDISKĀS KONSULTĀCIJAS, PĀRSTĀVĪBA, AIZSTĀVĪBA, CILVĒKTIESĪBU AIZSTĀVĪBA, BĒRNU UN SPORTA PASĀKUMI"
+
+Original size: 125 MB
+Only name, "SIA", address and index: 45 MB
++ only existing companies: 26 mb
