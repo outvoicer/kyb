@@ -4,13 +4,7 @@ use crate::tasks::lv_company_search::lv_company_search;
 use crate::tasks::lv_company_search_air::lv_company_search_air;
 use crate::tasks::lv_respond::lv_respond;
 use actix_web::{App, HttpServer, web};
-use rusqlite::{Connection, Result};
 use std::io::{Error, ErrorKind};
-use std::sync::Mutex;
-
-struct AppState {
-    db: Mutex<Connection>,
-}
 
 pub async fn start_server() -> std::io::Result<()> {
     match get_db() {

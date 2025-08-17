@@ -13,7 +13,6 @@ pub async fn lv_company_search(
     let conn: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
 
-    println!("aaa{:?}", query);
     let company_query: CompanySearchQuery = query.into_inner();
     match lv_company_search_handle(&conn, company_query).await {
         Ok(results) => {

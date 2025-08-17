@@ -1,5 +1,5 @@
+use crate::db::log::log;
 use crate::db::query::Query;
-use crate::db::{get_db::get_db, log::log};
 use crate::error::KybError;
 use crate::verify::validate_and_verify::validate_and_verify;
 use actix_web::web;

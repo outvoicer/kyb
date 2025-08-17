@@ -3,11 +3,11 @@ use crate::company::import::import_companies_from_csv;
 use crate::db::get_db::Pool;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::Connection;
 use std::error::Error;
 use std::fs::File;
 use std::io::{Cursor, Read};
 
+#[allow(dead_code)]
 pub async fn create_test_db() -> Result<Pool, Box<dyn Error>> {
     let manager = SqliteConnectionManager::memory();
     let pool = Pool::new(manager).unwrap();

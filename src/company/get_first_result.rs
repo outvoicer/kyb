@@ -3,6 +3,7 @@ use crate::company::company::Company;
 use rusqlite::Connection;
 use std::error::Error;
 
+#[allow(dead_code)]
 pub async fn get_first_result(
     conn: &Connection,
     search_term: &String,

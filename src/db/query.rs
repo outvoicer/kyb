@@ -8,6 +8,7 @@ pub struct Query {
 }
 
 impl Query {
+    #[allow(dead_code)]
     pub fn new(name: String, personal_code: String, reg_code: String) -> Self {
         Self {
             name: name,

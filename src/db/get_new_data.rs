@@ -6,7 +6,7 @@ use chrono::Local;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use reqwest::get;
-use rusqlite::{Connection, Result, params};
+use rusqlite::{Result, params};
 use std::error::Error;
 use std::io::Cursor;
 
@@ -33,7 +33,7 @@ pub async fn fetch_and_store_data() -> Result<(), Box<dyn Error>> {
     // CREATE TABLE, IF DOES NOT EXIST
     create_table(&conn).await?;
     // DELETE ALL EXISTING RECORDS
-    &conn.execute("DELETE FROM officers", [])?;
+    conn.execute("DELETE FROM officers", [])?;
     // Begin a transaction
     let transaction = conn.transaction()?;
 

@@ -8,11 +8,9 @@ pub async fn schedule_update() {
         let hour = KybConfig::UPDATE_HOUR;
         let minute = KybConfig::UPDATE_MINUTE;
         let _ = wait_for_task(hour, minute).await;
-        /*
         if let Err(e) = fetch_and_store_data().await {
             eprintln!("Error with member of board data: {}", e);
         }
-         */
         if let Err(e) = fetch_new_company_data().await {
             eprintln!("Error with company data: {}", e);
         }
