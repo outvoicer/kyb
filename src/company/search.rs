@@ -1,3 +1,4 @@
+use crate::company::clean_name::clean_company_name;
 use crate::company::company::Company;
 use crate::company::notmalize::normalize_string;
 use crate::company::search_map_results::search_map_results;
@@ -12,9 +13,15 @@ impl Company {
         let mut stmt = conn.prepare(
             "SELECT legal_form, name, city, address, zip, reg_code  FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
         )?;
-        let normalized_name = normalize_string(name);
+        // REMOVE SIA FROM BEGINNING
+        let clean_name = clean_company_name(&name);
+        // MAKE SMALL CAPS AND LATIN LETTERS
+        let normalized_name = normalize_string(&clean_name.to_string());
+        // QUERY
         let rows = stmt.query(params![normalized_name])?;
+        // MAP RESUTS
         let search_results = search_map_results(rows).await?;
+        // RETURN
         Ok(search_results)
     }
 }
@@ -29,6 +36,7 @@ mod tests {
     async fn name_search_lv_letters() {
         let conn = create_test_db().await.unwrap();
         let reg_code = "90000519196".to_string();
+
         // Raimond fantastic
         let search_term = "Raimond fantastic".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
@@ -84,5 +92,9 @@ mod tests {
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, "50103563161".to_string());
         assert_eq!(result.legal_form, "SIA".to_string());
+        //SIA iS REMOVED FROM BEGINNING, RETURNS FIRST COMPANY THAT HAS R
+        let search_term = "SIA R".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(result.reg_code, "40008234596".to_string());
     }
 }

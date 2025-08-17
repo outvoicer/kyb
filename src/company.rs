@@ -1,3 +1,4 @@
+pub mod clean_name;
 pub mod company;
 pub mod create_company_table;
 pub mod create_test_db;

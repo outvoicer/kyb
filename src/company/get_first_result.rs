@@ -9,6 +9,7 @@ pub async fn get_first_result(
 ) -> Result<Company, Box<dyn Error>> {
     match Company::search_by_name(&conn, &search_term).await {
         Ok(companies) => {
+            // println!("{:?}", &companies);
             if let Some(first_company) = companies.first() {
                 return Ok(first_company.clone());
             } else {
