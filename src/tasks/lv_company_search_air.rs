@@ -1,4 +1,5 @@
 use crate::company::company::Company;
+use crate::error::KybError;
 use crate::tasks::lv_company_search_handle::CompanySearchQuery;
 use crate::tasks::lv_company_search_handle::lv_company_search_handle;
 use actix_web::{Error, HttpRequest, HttpResponse, rt, web};
@@ -13,18 +14,14 @@ struct AirSearchResponse {
     error: Option<String>,
 }
 
-async fn send_message(session: &mut Session, input: AirSearchResponse) -> () {
-    match serde_json::to_string(&input) {
-        Ok(json_result) => {
-            // SEND
-            if let Err(e) = session.text(json_result).await {
-                println!("Failed to send message: {:?}", e);
-            }
-        }
-        Err(e) => {
-            println!("Failed to serialize result: {:?}", e);
-        }
+async fn send_message(session: &mut Session, input: AirSearchResponse) -> Result<(), KybError> {
+    let payload = serde_json::to_string(&input)?;
+    //session.text(payload).await;
+    if let Err(e) = &session.text(payload).await {
+        //return Err(e);
+        println!("send error: {}", e);
     }
+    Ok(())
 }
 
 pub async fn lv_company_search_air(
@@ -55,19 +52,10 @@ pub async fn lv_company_search_air(
                                         result: Some(result),
                                         error: None,
                                     };
-                                    match serde_json::to_string(&respo) {
-                                        Ok(json_result) => {
-                                            // SEND
-                                            if let Err(e) = &session.text(json_result).await {
-                                                println!("Failed to send message: {:?}", e);
-                                            }
-                                        }
-                                        Err(e) => {
-                                            println!("Failed to serialize result: {:?}", e);
-                                        }
-                                    }
+                                    let _ = send_message(&mut session, respo).await;
                                 }
-                                Err(err) => {}
+                                // I NEVER ERROR
+                                Err(_) => {}
                             }
                         }
                         Err(e) => {
