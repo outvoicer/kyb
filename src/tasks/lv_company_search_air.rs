@@ -1,14 +1,9 @@
-use crate::error::KybError;
 use crate::tasks::lv_company_search_handle::CompanySearchQuery;
 use crate::tasks::lv_company_search_handle::lv_company_search_handle;
-use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, rt, web};
+use actix_web::{Error, HttpRequest, HttpResponse, rt, web};
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
-//use futures_util::stream::stream::StreamExt;
 
-//async fn echo(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-
-//query: web::Json<CompanySearchQuery>
 pub async fn lv_company_search_air(
     req: HttpRequest,
     stream: web::Payload,
@@ -17,22 +12,51 @@ pub async fn lv_company_search_air(
 
     let mut stream = stream
         .aggregate_continuations()
-        // aggregate continuation frames up to 1MiB
-        .max_continuation_size(2_usize.pow(20));
+        // aggregate continuation frames up to 10 kb
+        .max_continuation_size(10 * 1024);
 
     // start task but don't wait for it
     rt::spawn(async move {
         // receive messages from websocket
         while let Some(msg) = stream.next().await {
             match msg {
-                Ok(AggregatedMessage::Text(text)) => {
-                    // echo text message
-                    session.text(text).await.unwrap();
+                Ok(AggregatedMessage::Text(bytes)) => {
+                    println!("{}", &bytes);
+                    // SERIALIZE
+                    match serde_json::from_slice::<CompanySearchQuery>(&bytes.as_bytes()) {
+                        Ok(query) => {
+                            // SEARCH
+                            match lv_company_search_handle(query).await {
+                                Ok(result) => {
+                                    // STRINGIFY:
+                                    match serde_json::to_string(&result) {
+                                        Ok(json_result) => {
+                                            // SEND
+                                            if let Err(e) = session.text(json_result).await {
+                                                println!("Failed to send message: {:?}", e);
+                                            }
+                                        }
+                                        Err(e) => {
+                                            println!("Failed to serialize result: {:?}", e);
+                                        }
+                                    }
+                                }
+                                Err(err) => {}
+                            }
+                        }
+                        Err(e) => {
+                            // Deserialization failed
+                            println!("Failed to deserialize message: {:?}", e);
+                            // Handle the error, e.g., send an error response
+                        }
+                    }
                 }
 
-                Ok(AggregatedMessage::Binary(bin)) => {
+                Ok(AggregatedMessage::Binary(_bin)) => {
                     // echo binary message
-                    session.binary(bin).await.unwrap();
+                    if let Err(e) = session.text("Only text messages allowed").await {
+                        println!("Failed to send message: {:?}", e);
+                    }
                 }
 
                 Ok(AggregatedMessage::Ping(msg)) => {
@@ -47,22 +71,4 @@ pub async fn lv_company_search_air(
 
     // respond immediately with response connected to WS session
     Ok(res)
-
-    /*
-    match lv_company_search_handle(query).await {
-        Ok(results) => {
-            return HttpResponse::Ok().json(results);
-        }
-        Err(err) => match err {
-            KybError::StringError(err) => {
-                HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err }))
-            }
-            _ => {
-                eprintln!("server down: {:?}", &err);
-                HttpResponse::InternalServerError()
-                    .json(serde_json::json!({ "error": "Server down" }))
-            }
-        },
-    }
-    */
 }

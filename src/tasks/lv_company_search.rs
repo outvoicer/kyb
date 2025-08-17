@@ -4,7 +4,8 @@ use crate::tasks::lv_company_search_handle::lv_company_search_handle;
 use actix_web::{HttpResponse, Responder, web};
 
 pub async fn lv_company_search(query: web::Json<CompanySearchQuery>) -> impl Responder {
-    match lv_company_search_handle(query).await {
+    let company_query: CompanySearchQuery = query.into_inner();
+    match lv_company_search_handle(company_query).await {
         Ok(results) => {
             return HttpResponse::Ok().json(results);
         }
