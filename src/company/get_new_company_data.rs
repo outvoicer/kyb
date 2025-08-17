@@ -1,6 +1,8 @@
 use crate::company::import::import_companies_from_csv;
 use crate::config::KybConfig;
 use crate::db::get_db::get_db;
+use r2d2::PooledConnection;
+use r2d2_sqlite::SqliteConnectionManager;
 use reqwest::get;
 use rusqlite::Result;
 use std::error::Error;
@@ -16,7 +18,10 @@ pub async fn fetch_new_company_data() -> Result<(), Box<dyn Error>> {
         .delimiter(b';')
         .from_reader(cursor);
 
-    let mut conn = get_db()?;
+    let pool = get_db()?;
+    let mut conn: PooledConnection<SqliteConnectionManager> =
+        pool.get().expect("Couldn't get db connection from pool");
+
     import_companies_from_csv(&mut conn, rdr).await?;
     Ok(())
 }

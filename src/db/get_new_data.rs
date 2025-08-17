@@ -3,6 +3,8 @@ use crate::db::Officer;
 use crate::db::create_table::create_table;
 use crate::db::get_db::get_db;
 use chrono::Local;
+use r2d2::PooledConnection;
+use r2d2_sqlite::SqliteConnectionManager;
 use reqwest::get;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
@@ -24,11 +26,14 @@ pub async fn fetch_and_store_data() -> Result<(), Box<dyn Error>> {
         .from_reader(cursor);
 
     print("Store data");
-    let mut conn = get_db()?;
+    let pool = get_db()?;
+    let mut conn: PooledConnection<SqliteConnectionManager> =
+        pool.get().expect("Couldn't get db connection from pool");
+
     // CREATE TABLE, IF DOES NOT EXIST
     create_table(&conn).await?;
     // DELETE ALL EXISTING RECORDS
-    conn.execute("DELETE FROM officers", [])?;
+    &conn.execute("DELETE FROM officers", [])?;
     // Begin a transaction
     let transaction = conn.transaction()?;
 

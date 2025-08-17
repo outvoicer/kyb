@@ -1,8 +1,9 @@
-use crate::tasks::one_lv_air_message::one_lv_air_message;
+use crate::{db::get_db::Pool, tasks::one_lv_air_message::one_lv_air_message};
 use actix_web::{Error, HttpRequest, HttpResponse, rt, web};
 use futures_util::StreamExt as _;
 
 pub async fn lv_company_search_air(
+    pool: web::Data<Pool>,
     req: HttpRequest,
     stream: web::Payload,
 ) -> Result<HttpResponse, Error> {
@@ -11,11 +12,13 @@ pub async fn lv_company_search_air(
         .aggregate_continuations()
         // aggregate continuation frames up to 10 kb
         .max_continuation_size(10 * 1024);
+    let pool_clone = pool.clone();
+
     // start task but don't wait for it
     rt::spawn(async move {
         // receive messages from websocket
         while let Some(msg) = stream.next().await {
-            if let Err(e) = one_lv_air_message(&mut session, msg).await {
+            if let Err(e) = one_lv_air_message(pool_clone.clone(), &mut session, msg).await {
                 //return Err(e);
                 println!("LV air message error: {}", e);
             }

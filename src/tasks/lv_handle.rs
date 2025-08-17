@@ -3,9 +3,10 @@ use crate::db::{get_db::get_db, log::log};
 use crate::error::KybError;
 use crate::verify::validate_and_verify::validate_and_verify;
 use actix_web::web;
+use rusqlite::Connection;
 
-pub async fn handle_lv(query: web::Json<Query>) -> Result<i64, KybError> {
-    let db = get_db()?;
+pub async fn handle_lv(db: &Connection, query: web::Json<Query>) -> Result<i64, KybError> {
+    //let db = get_db()?;
     match validate_and_verify(&db, &query).await {
         Ok(_) => {
             // LOG

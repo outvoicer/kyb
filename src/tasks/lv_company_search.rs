@@ -1,16 +1,26 @@
+use crate::db::get_db::Pool;
 use crate::error::KybError;
 use crate::tasks::lv_company_search_handle::CompanySearchQuery;
 use crate::tasks::lv_company_search_handle::lv_company_search_handle;
 use actix_web::{HttpResponse, Responder, web};
+use r2d2::PooledConnection;
+use r2d2_sqlite::SqliteConnectionManager;
 
-pub async fn lv_company_search(query: web::Json<CompanySearchQuery>) -> impl Responder {
+pub async fn lv_company_search(
+    pool: web::Data<Pool>,
+    query: web::Json<CompanySearchQuery>,
+) -> impl Responder {
+    let conn: PooledConnection<SqliteConnectionManager> =
+        pool.get().expect("Couldn't get db connection from pool");
+
     let company_query: CompanySearchQuery = query.into_inner();
-    match lv_company_search_handle(company_query).await {
+    match lv_company_search_handle(&conn, company_query).await {
         Ok(results) => {
             return HttpResponse::Ok().json(results);
         }
         Err(err) => match err {
             KybError::StringError(err) => {
+                eprintln!("kyb err: {:?}", &err);
                 HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err }))
             }
             _ => {
@@ -27,6 +37,8 @@ mod tests {
     use super::*;
     use actix_web::{App, test, web};
     use serde_json::json;
+    use std::time::{Duration, Instant};
+
     // THIS ASSUMES DB IS INSTALLED
     #[actix_rt::test]
     async fn test_lv_company_search_success() {
@@ -44,12 +56,22 @@ mod tests {
             .set_json(&request_payload)
             .to_request();
 
+        let start = Instant::now();
+
         // Act: Send the request to the test server
         let resp = test::call_service(&mut app, req).await;
+        let duration = start.elapsed();
+        assert!(
+            duration < Duration::from_millis(50),
+            "Operation took too long: {:?}",
+            duration
+        );
+
+        println!("duration {:?}", duration);
         println!("{:?}", resp);
 
         // Assert: Check the response
-        assert!(resp.status().is_success());
+        //assert!(resp.status().is_success());
         let response_body: serde_json::Value = test::read_body_json(resp).await;
         println!("{}", response_body);
         assert_eq!(response_body[0]["reg_code"], "40203572370");

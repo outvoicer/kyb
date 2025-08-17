@@ -1,23 +1,30 @@
 use crate::company::company::Company;
+use crate::db::get_db::Pool;
 use crate::error::KybError;
 use crate::tasks::lv_company_search_handle::CompanySearchQuery;
 use crate::tasks::lv_company_search_handle::lv_company_search_handle;
+use actix_web::web;
 use actix_ws::AggregatedMessage;
 use actix_ws::ProtocolError;
 use actix_ws::Session;
+use r2d2::PooledConnection;
+use r2d2_sqlite::SqliteConnectionManager;
 use serde::{Deserialize, Serialize};
 
 pub async fn one_lv_air_message(
+    pool: web::Data<Pool>,
     mut session: &mut Session,
     msg: Result<AggregatedMessage, ProtocolError>,
 ) -> Result<(), KybError> {
+    let conn: PooledConnection<SqliteConnectionManager> =
+        pool.get().expect("Couldn't get db connection from pool");
     match msg {
         Ok(AggregatedMessage::Text(bytes)) => {
             // SERIALIZE
             match serde_json::from_slice::<CompanySearchQuery>(&bytes.as_bytes()) {
                 Ok(query) => {
                     // SEARCH
-                    let result = lv_company_search_handle(query).await?;
+                    let result = lv_company_search_handle(&conn, query).await?;
                     // STRINGIFY:
                     let respo = AirSearchResponse {
                         result: Some(result),
