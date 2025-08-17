@@ -119,9 +119,12 @@ curl https://data.gov.lv/dati/dataset/9a5eae1c-2438-48cf-854b-6a2c170f918f/resou
 Company::search_by_name(&Connection, &String)
 Company::create_table(conn)
 
+curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond"}' -vvv
+
 ```
 
 
 # Considerations - Company registry
 There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.
-Address with 4 commas is covered.
+
+Search "", get []

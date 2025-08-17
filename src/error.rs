@@ -1,4 +1,6 @@
+use std::error::Error as StdError;
 use thiserror::Error;
+
 //
 #[derive(Error, Debug)]
 pub enum KybError {
@@ -10,4 +12,7 @@ pub enum KybError {
 
     #[error("Error: {0}")]
     StringError(String),
+
+    #[error("Std error: {0}")]
+    StdError(#[from] Box<dyn StdError>),
 }

@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    async fn regular_Janis_instead_of_Jānis_fails() {
+    async fn regular_janis_instead_of_jānis_fails() {
         let conn = setup_test_db().await;
 
         let q = Query {

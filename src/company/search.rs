@@ -18,6 +18,10 @@ impl Company {
         let clean_name = clean_company_name(&name);
         // MAKE SMALL CAPS AND LATIN LETTERS
         let normalized_name = normalize_string(&clean_name.to_string());
+        // IF NOTHING LEFT, RETURN EMPTY
+        if normalized_name == "".to_string() {
+            return Ok(vec![]);
+        }
         // QUERY
         let rows = stmt.query(params![normalized_name])?;
         // MAP RESUTS
