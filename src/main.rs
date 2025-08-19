@@ -2,6 +2,7 @@ mod company;
 mod config;
 mod db;
 mod error;
+mod public_institution;
 mod tasks;
 mod verify;
 
