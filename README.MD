@@ -125,6 +125,8 @@ curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/jso
 
 
 # Considerations - Company registry
+```
+
 There are companies with a registration code 000703116, which seams unsafe to store as number and we use string.
 search limit 10
 Search "", get []
@@ -134,3 +136,10 @@ longest name is 151 chars: "JURIDISKU SŪDZĪBU RAKSTĪŠANAS BIEDRĪBA, BIZNESA
 Original size: 125 MB
 Only name, "SIA", address and index: 45 MB
 + only existing companies: 26 mb
+
+ws ws://127.0.0.1:10001/lv/air
+{"name": "Raimond"}
+
+curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond "}' -vvv
+
+```

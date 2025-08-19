@@ -8,6 +8,7 @@ pub async fn create_company_log_table(conn: &Connection) -> Result<(), Box<dyn E
                 input TEXT,
                 search_name TEXT,
                 results TEXT,
+                time TEXT,
                 error TEXT
             )",
         [],
