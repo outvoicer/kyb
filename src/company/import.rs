@@ -14,14 +14,14 @@ pub async fn import_companies_from_csv(
     // CREATE TABLE, IF DOES NOT EXIST
     Company::create_table(&conn).await?;
     // DELETE ALL EXISTING RECORDS
-    conn.execute("DELETE FROM company", [])?;
+    conn.execute("DELETE FROM company WHERE public_sector = '0'", [])?;
 
     // Begin a transaction
     let transaction = conn.transaction()?;
 
     {
         let mut stmt = transaction.prepare(
-                "INSERT INTO company (legal_form, name, city, address, zip, normal_name, reg_code) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+                "INSERT INTO company (legal_form, name, city, address, zip, normal_name, public_sector, reg_code) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
@@ -38,6 +38,7 @@ pub async fn import_companies_from_csv(
                     address,
                     input_company.index,
                     normal_name,
+                    "0".to_string(),
                     input_company.regcode,
                 ])?;
             }

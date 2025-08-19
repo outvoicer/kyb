@@ -8,5 +8,6 @@ pub struct Company {
     pub city: Option<String>,
     pub address: Option<String>,
     pub zip: Option<u32>,
+    pub public_sector: String,
     pub reg_code: String,
 }

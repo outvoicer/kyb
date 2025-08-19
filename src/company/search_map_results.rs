@@ -8,6 +8,7 @@ struct SearchResult {
     address: Option<String>,
     city: Option<String>,
     zip: Option<u32>,
+    public_sector: String,
     reg_code: String,
 }
 
@@ -22,7 +23,8 @@ pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<
             city: row.get(2)?,
             address: row.get(3)?,
             zip: row.get(4)?,
-            reg_code: row.get(5)?,
+            public_sector: row.get(5)?,
+            reg_code: row.get(6)?,
         };
         results.push(result);
     }
@@ -37,6 +39,7 @@ pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<
             city: search_result.city,
             address: search_result.address,
             zip: search_result.zip,
+            public_sector: search_result.public_sector,
             reg_code: search_result.reg_code,
         };
         search_results.push(company);

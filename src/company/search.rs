@@ -12,14 +12,14 @@ impl Company {
         name: &String,
     ) -> Result<Vec<Company>, Box<dyn Error>> {
         let mut stmt = conn.prepare(
-            "SELECT legal_form, name, city, address, zip, reg_code  FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
+            "SELECT legal_form, name, city, address, zip, public_sector, reg_code FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
         )?;
         // REMOVE SIA FROM BEGINNING
         let clean_name = clean_company_name(&name);
         // MAKE SMALL CAPS AND LATIN LETTERS
         let normalized_name = normalize_string(&clean_name.to_string());
-        // IF NOTHING LEFT, RETURN EMPTY
         if normalized_name == "".to_string() {
+            // IF NOTHING LEFT, RETURN EMPTY
             log_search(conn, name, &normalized_name, &vec![], "".to_string()).await;
             return Ok(vec![]);
         }
@@ -116,5 +116,10 @@ mod tests {
         let search_term = "SIA R".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, "40008234596".to_string());
+        // TBD AS Something Liepsaime
+        let search_term = "AS Liepsaime".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        println!("{:?}", result);
+        assert_eq!(result.reg_code, "40203179017".to_string());
     }
 }

@@ -10,7 +10,7 @@ use std::io::Cursor;
 pub async fn fetch_new_public_institution_data(
     conn: &mut PooledConnection<SqliteConnectionManager>,
 ) -> Result<(), Box<dyn Error>> {
-    let url = KybConfig::SOURCE_COMPANIES;
+    let url = KybConfig::SOURCE_PUBLIC_INSTITUTIONS;
     println!("getting {}", url);
     let response = get(url).await?.text().await?;
     let cursor = Cursor::new(response);

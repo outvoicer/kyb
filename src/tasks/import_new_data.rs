@@ -12,7 +12,6 @@ pub async fn import_new_data() {
             let mut conn: PooledConnection<SqliteConnectionManager> =
                 pool.get().expect("Couldn't get db connection from pool");
             // GET MEMBERS OF BOARDS
-            /*
             if let Err(e) = fetch_and_store_data(&mut conn).await {
                 eprintln!("Error with member of board data: {}", e);
             }
@@ -20,10 +19,9 @@ pub async fn import_new_data() {
             if let Err(e) = fetch_new_company_data(&mut conn).await {
                 eprintln!("Error with company data: {}", e);
             }
-            */
             // GET PUBLIC INSTITUTIONS
             if let Err(e) = fetch_new_public_institution_data(&mut conn).await {
-                eprintln!("Error with company data: {}", e);
+                eprintln!("Error with public institutions data: {}", e);
             }
         }
         Err(err) => {

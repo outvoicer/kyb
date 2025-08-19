@@ -10,10 +10,15 @@ fn is_zip(zip_code: &str) -> bool {
 /// get (city, address, zip) from government address
 pub fn parse_gov_address(address: &String) -> (String, String, String) {
     let address_data: Vec<&str> = address.split(',').map(str::trim).collect();
-    let address = address_data.get(0).unwrap_or(&"").to_string();
+    let mut address = address_data.get(0).unwrap_or(&"").to_string();
     let mut city = address_data.get(1).unwrap_or(&"").to_string();
     let mut zip = "".to_string();
     match address_data.len() {
+        1 => {}
+        2 => {
+            city = address_data.get(0).unwrap_or(&"").to_string();
+            address = address_data.get(1).unwrap_or(&"").to_string();
+        }
         3 => {
             let entry = address_data.get(2).unwrap_or(&"").to_string();
             if is_zip(&entry) {
