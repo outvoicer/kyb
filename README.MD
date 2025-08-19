@@ -62,6 +62,7 @@ cargo build --release
 ```
 
 # Test
+Some tests require db to be installed and some require server to be running.
 ```
 cargo watch -x "test"
 cargo watch -x "test query -- --nocapture"
