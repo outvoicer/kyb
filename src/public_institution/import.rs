@@ -31,7 +31,7 @@ pub async fn import_public_institutions_from_csv(
                 let normal_name = normalize_string(&input.name);
                 let (city, address, zip) = parse_gov_address(&input.address);
                 stmt.execute(params![
-                    "", // LIBRARY IS NOT SIA
+                    "", // EMPTY STRING FOR GOV INSTITUTIONS
                     input.name,
                     city,
                     address,

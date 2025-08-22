@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[allow(non_snake_case)]
 #[derive(Debug, Deserialize, Serialize, Clone)]
 /// schema for company register
+/// https://dati.ur.gov.lv/register/ppi_public_persons_institutions.csv
 pub struct PublicInstitution {
     pub name: String,
     pub registrationNumber: String,

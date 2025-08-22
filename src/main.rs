@@ -4,6 +4,7 @@ mod db;
 mod error;
 mod public_institution;
 mod tasks;
+mod vat;
 mod verify;
 
 use crate::tasks::cli::cli;

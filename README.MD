@@ -101,7 +101,7 @@ sudo systemctl start kyb
 curl -X POST http://127.0.0.1:10001/lv -H "Content-Type: application/json" -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
 
  curl -X POST https://kyb.outvoicer.com/lv -H "Content-Type: application/json" -d '{"name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360"}'
-
+//
 # Misc
 ```
 All companies in Latvia:
