@@ -1,60 +1,58 @@
+/// Check if the string starts with "LV-" and has the correct length
 fn is_zip(zip_code: &str) -> bool {
-    // Check if the string starts with "LV-" and has the correct length
     if zip_code.len() != 7 || !zip_code.starts_with("LV-") {
         return false;
     }
-
     return true;
 }
 
 /// get (city, address, zip) from government address
-pub fn parse_gov_address(address: &String) -> (String, String, String) {
+pub fn parse_gov_address(address: &str) -> (String, String, String) {
     let address_data: Vec<&str> = address.split(',').map(str::trim).collect();
-    let mut address = address_data.get(0).unwrap_or(&"").to_string();
-    let mut city = address_data.get(1).unwrap_or(&"").to_string();
-    let mut zip = "".to_string();
+
+    let mut address = String::new();
+    let mut city = String::new();
+    let mut zip = String::new();
+
     match address_data.len() {
-        1 => {}
+        1 => {
+            address = address_data[0].to_string();
+        }
         2 => {
-            city = address_data.get(0).unwrap_or(&"").to_string();
-            address = address_data.get(1).unwrap_or(&"").to_string();
+            city = address_data[0].to_string();
+            address = address_data[1].to_string();
         }
         3 => {
-            let entry = address_data.get(2).unwrap_or(&"").to_string();
-            if is_zip(&entry) {
-                zip = entry;
+            address = address_data[0].to_string();
+            city = address_data[1].to_string();
+            if is_zip(address_data[2]) {
+                zip = address_data[2].to_string();
             }
         }
         4 => {
-            let address_1 = address_data.get(1).unwrap_or(&"").to_string();
-            let address_2 = address_data.get(2).unwrap_or(&"").to_string();
-            let possible_index = address_data.get(3).unwrap_or(&"").to_string();
-            if is_zip(&possible_index) {
-                zip = possible_index;
-                city = format!("{}, {}", address_1, address_2);
+            address = address_data[0].to_string();
+            city = format!("{}, {}", address_data[1], address_data[2]);
+            if is_zip(address_data[3]) {
+                zip = address_data[3].to_string();
             } else {
-                city = format!("{}, {}", address_1, possible_index);
+                city = format!("{}, {}", city, address_data[3]);
             }
         }
         5 => {
-            let address_1 = address_data.get(1).unwrap_or(&"").to_string();
-            let address_2 = address_data.get(2).unwrap_or(&"").to_string();
-            let address_3 = address_data.get(3).unwrap_or(&"").to_string();
-            let possible_index = address_data.get(4).unwrap_or(&"").to_string();
-
-            if is_zip(&possible_index) {
-                zip = possible_index;
-                city = format!("{}, {}, {}", address_1, address_2, address_3);
+            address = address_data[0].to_string();
+            city = format!(
+                "{}, {}, {}",
+                address_data[1], address_data[2], address_data[3]
+            );
+            if is_zip(address_data[4]) {
+                zip = address_data[4].to_string();
             } else {
-                city = format!(
-                    "{}, {}, {}, {}",
-                    address_1, address_2, address_3, possible_index
-                );
+                city = format!("{}, {}", city, address_data[4]);
             }
         }
-        _ => println!("exception: {:?}", address_data),
+        _ => println!("Unexpected format: {:?}", address_data),
     }
-    //let address = address_data.drain(2..).collect::<Vec<&str>>().join(", ");
+
     (city, address, zip)
 }
 
