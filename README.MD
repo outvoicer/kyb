@@ -123,7 +123,8 @@ Company::create_table(conn)
 curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond"}' -vvv
 
 ```
-
+# Considerations - VAT
+Assumes reg code is VAT number without "LV" in beginning.
 
 # Considerations - Company registry
 ```

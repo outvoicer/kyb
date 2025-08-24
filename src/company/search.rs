@@ -121,5 +121,10 @@ mod tests {
         let result = get_first_result(&conn, &search_term).await.unwrap();
         println!("{:?}", result);
         assert_eq!(result.reg_code, "40203179017".to_string());
+        // TBD - SEND PRECICE MATCH FIRST
+        let search_term = "Laik".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        println!("{:?}", result);
+        assert_eq!(result.reg_code, "40203179017".to_string());
     }
 }

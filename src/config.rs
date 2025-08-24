@@ -8,4 +8,5 @@ impl KybConfig {
     pub const UPDATE_MINUTE: u32 = 0;
     pub const SOURCE_PUBLIC_INSTITUTIONS: &'static str =
         "https://dati.ur.gov.lv/register/ppi_public_persons_institutions.csv";
+    pub const SOURCE_VAT: &'static str = "https://data.gov.lv/dati/dataset/9a5eae1c-2438-48cf-854b-6a2c170f918f/resource/610910e9-e086-4c5b-a7ea-0a896a697672/download/pdb_pvnmaksataji_odata.csv";
 }

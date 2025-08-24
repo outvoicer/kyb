@@ -4,8 +4,10 @@ pub async fn cli(args: Vec<String>) {
     // CLI
     let first_arg = &args[1];
     if first_arg == "install" {
-        import_new_data().await;
+        if let Err(e) = import_new_data().await {
+            eprintln!("install error: {}", e);
+        };
     } else {
-        eprintln!("help: only legal command is 'install'");
+        eprintln!("help: only working command is 'install'");
     }
 }
