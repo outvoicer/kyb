@@ -2,6 +2,7 @@ use crate::company::company::Company;
 use crate::company::input_company::InputCompany;
 use crate::company::notmalize::normalize_string;
 use crate::company::parse_address::parse_address;
+use crate::vat::vat_status::vat_status;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::collections::HashSet;
@@ -11,7 +12,7 @@ use std::io::Cursor;
 pub async fn import_companies_from_csv(
     conn: &mut Connection,
     mut rdr: Reader<Cursor<String>>,
-    vat_table: HashSet<String>,
+    vat_table: &HashSet<String>,
 ) -> Result<(), Box<dyn Error>> {
     // CREATE TABLE, IF DOES NOT EXIST
     Company::create_table(&conn).await?;
@@ -34,13 +35,7 @@ pub async fn import_companies_from_csv(
                     get_name_and_normal_name(input_company.name_in_quotes, input_company.name);
                 let (city, address) = get_city_and_address(input_company.address);
 
-                let mut vat = false;
-                let mut vat_number = None;
-                if vat_table.contains(&input_company.regcode) {
-                    vat = true;
-                    let number = format!("LV{}", input_company.regcode);
-                    vat_number = Some(number);
-                }
+                let (vat, vat_number) = vat_status(&input_company.regcode, &vat_table);
 
                 stmt.execute(params![
                     input_company.r#type,

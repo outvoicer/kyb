@@ -1,6 +1,7 @@
 use crate::company::company::Company;
 use crate::company::import::import_companies_from_csv;
 use crate::db::get_db::Pool;
+use crate::public_institution::import::import_public_institutions_from_csv;
 use crate::vat::read_sample_data::read_sample_vat_data;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -15,7 +16,6 @@ pub async fn create_test_db() -> Result<Pool, Box<dyn Error>> {
     let mut conn: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
 
-    // let mut conn = Connection::open_in_memory()?;
     // ADD TABLE SCHEMA
     Company::create_table(&conn).await?;
     // GET SAMPLE DATA
@@ -28,8 +28,22 @@ pub async fn create_test_db() -> Result<Pool, Box<dyn Error>> {
     let rdr = csv::ReaderBuilder::new()
         .delimiter(b';')
         .from_reader(cursor);
-    // SAVE DATA
+    // GET VAT DATA
     let vat_table = read_sample_vat_data().await?;
-    import_companies_from_csv(&mut conn, rdr, vat_table).await?;
+    // IMPORT COMPANIES
+    import_companies_from_csv(&mut conn, rdr, &vat_table).await?;
+    // GET PUBLIC COMPANIES DATA
+    let path_gov = "./src/public_institution/ppi_public_persons_institutions.csv";
+    let mut file_gov = File::open(path_gov)?;
+    let mut contents_gov = String::new();
+    file_gov.read_to_string(&mut contents_gov)?;
+    let cursor_gov = Cursor::new(contents_gov);
+
+    let rdr_gov = csv::ReaderBuilder::new()
+        .delimiter(b';')
+        .from_reader(cursor_gov);
+
+    import_public_institutions_from_csv(&mut conn, rdr_gov, &vat_table).await?;
+    // IMPORT CSB
     Ok(pool)
 }

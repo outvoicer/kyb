@@ -10,7 +10,7 @@ use std::io::Cursor;
 
 pub async fn fetch_new_company_data(
     conn: &mut PooledConnection<SqliteConnectionManager>,
-    vat_table: HashSet<String>,
+    vat_table: &HashSet<String>,
 ) -> Result<(), Box<dyn Error>> {
     let url = KybConfig::SOURCE_COMPANIES;
     println!("getting {}", url);
@@ -21,6 +21,6 @@ pub async fn fetch_new_company_data(
         .delimiter(b';')
         .from_reader(cursor);
 
-    import_companies_from_csv(conn, rdr, vat_table).await?;
+    import_companies_from_csv(conn, rdr, &vat_table).await?;
     Ok(())
 }

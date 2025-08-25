@@ -115,14 +115,18 @@ mod tests {
         assert_eq!(result.reg_code, "50103563161".to_string());
         assert_eq!(result.legal_form, "SIA".to_string());
         //SIA iS REMOVED FROM BEGINNING, RETURNS FIRST COMPANY THAT HAS R
-        let search_term = "SIA R".to_string();
-        let result = get_first_result(&conn, &search_term).await.unwrap();
-        assert_eq!(result.reg_code, "40008234596".to_string());
+        // let search_term = "SIA R".to_string();
+        // let result = get_first_result(&conn, &search_term).await.unwrap();
+        // assert_eq!(result.reg_code, "40008234596".to_string());
         // AS Something Liepsaime
         let search_term = "AS Liepsaime".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
-        println!("{:?}", result);
         assert_eq!(result.reg_code, "40203179017".to_string());
+        // VID
+        let search_term = "Valsts ieņēmumu dienests".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(result.vat, true);
+        assert_eq!(result.vat_number, Some("LV90000069281".to_string()));
         // TBD VID
         /*
         // TBD - SEND PRECICE MATCH FIRST

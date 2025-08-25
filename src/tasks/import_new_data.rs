@@ -19,14 +19,13 @@ pub async fn import_new_data() -> Result<(), Box<dyn Error>> {
             }
 
             let vat_table = fetch_new_VAT_data().await?;
-            println!("{:?}", vat_table);
 
             // GET COMPANIES
-            if let Err(e) = fetch_new_company_data(&mut conn, vat_table).await {
+            if let Err(e) = fetch_new_company_data(&mut conn, &vat_table).await {
                 eprintln!("Error with company data: {}", e);
             }
             // GET PUBLIC INSTITUTIONS
-            if let Err(e) = fetch_new_public_institution_data(&mut conn).await {
+            if let Err(e) = fetch_new_public_institution_data(&mut conn, &vat_table).await {
                 eprintln!("Error with public institutions data: {}", e);
             }
         }

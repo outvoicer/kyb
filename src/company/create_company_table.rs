@@ -12,7 +12,7 @@ impl Company {
                 name TEXT NOT NULL,
                 city TEXT,
                 address TEXT,
-                zip INTEGER,
+                zip TEXT,
                 public_sector TEXT,
                 normal_name TEXT NOT NULL,
                 reg_code TEXT NOT NULL,

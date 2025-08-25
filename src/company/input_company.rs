@@ -17,7 +17,7 @@ pub struct InputCompany {
     terminated: String,
     pub closed: String,
     pub address: Option<String>,
-    pub index: Option<u32>,
+    pub index: Option<String>,
     addressid: u64,
     region: u64,
     city: Option<u32>,

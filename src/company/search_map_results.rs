@@ -7,7 +7,7 @@ struct SearchResult {
     name: String,
     address: Option<String>,
     city: Option<String>,
-    zip: Option<u32>,
+    zip: Option<String>,
     public_sector: String,
     reg_code: String,
     vat: bool,
