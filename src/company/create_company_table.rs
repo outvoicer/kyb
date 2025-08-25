@@ -15,7 +15,9 @@ impl Company {
                 zip INTEGER,
                 public_sector TEXT,
                 normal_name TEXT NOT NULL,
-                reg_code TEXT NOT NULL
+                reg_code TEXT NOT NULL,
+                vat INTEGER,
+                vat_number TEXT
             )",
             [],
         )?;

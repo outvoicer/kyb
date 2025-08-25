@@ -4,7 +4,7 @@ use std::collections::HashSet;
 use std::error::Error;
 use std::io::Cursor;
 
-pub async fn get_VAT_data(
+pub async fn get_vat_data(
     mut rdr: Reader<Cursor<String>>,
 ) -> Result<HashSet<String>, Box<dyn Error>> {
     let mut vat_map = HashSet::new();
@@ -13,6 +13,7 @@ pub async fn get_VAT_data(
         let input: VATSchema = result?;
         match input.Aktivs {
             IsActive::ir => {
+                // REMOVE LV FROM BEGINNING
                 let reg_code: String = (&input.Numurs[2..]).to_string();
                 vat_map.insert(reg_code);
             }

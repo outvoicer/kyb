@@ -10,4 +10,6 @@ pub struct Company {
     pub zip: Option<u32>,
     pub public_sector: String,
     pub reg_code: String,
+    pub vat: bool,
+    pub vat_number: Option<String>,
 }

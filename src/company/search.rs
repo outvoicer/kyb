@@ -12,7 +12,7 @@ impl Company {
         name: &String,
     ) -> Result<Vec<Company>, Box<dyn Error>> {
         let mut stmt = conn.prepare(
-            "SELECT legal_form, name, city, address, zip, public_sector, reg_code FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
+            "SELECT legal_form, name, city, address, zip, public_sector, reg_code, vat, vat_number FROM company WHERE normal_name LIKE ('%' || ?1 || '%') LIMIT 10"
         )?;
         // REMOVE SIA FROM BEGINNING
         let clean_name = clean_company_name(&name);
@@ -33,7 +33,7 @@ impl Company {
             name,
             &normalized_name,
             &search_results,
-            "".to_string(),
+            "".to_string(), // tbd vat result
         )
         .await;
         // RETURN
@@ -68,6 +68,8 @@ mod tests {
         assert_eq!(result.city, Some("Jūrmala".to_string()));
         assert_eq!(result.address, Some("Mellužu prospekts 76".to_string()));
         assert_eq!(result.legal_form, "SIA".to_string());
+        assert_eq!(result.vat, true);
+        assert_eq!(result.vat_number, Some("LV40203572370".to_string()));
         // ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE
         let search_term = "ROMAS KATOĻU BAZNĪCAS RĒZEKNES-AGLONAS DIECĒZE".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
@@ -116,15 +118,18 @@ mod tests {
         let search_term = "SIA R".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, "40008234596".to_string());
-        // TBD AS Something Liepsaime
+        // AS Something Liepsaime
         let search_term = "AS Liepsaime".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
         println!("{:?}", result);
         assert_eq!(result.reg_code, "40203179017".to_string());
+        // TBD VID
+        /*
         // TBD - SEND PRECICE MATCH FIRST
         let search_term = "Laik".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
         println!("{:?}", result);
         assert_eq!(result.reg_code, "40203179017".to_string());
+        */
     }
 }

@@ -10,6 +10,8 @@ struct SearchResult {
     zip: Option<u32>,
     public_sector: String,
     reg_code: String,
+    vat: bool,
+    vat_number: Option<String>,
 }
 
 pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<dyn Error>> {
@@ -25,6 +27,8 @@ pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<
             zip: row.get(4)?,
             public_sector: row.get(5)?,
             reg_code: row.get(6)?,
+            vat: row.get(7)?,
+            vat_number: row.get(8)?,
         };
         results.push(result);
     }
@@ -41,6 +45,8 @@ pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<
             zip: search_result.zip,
             public_sector: search_result.public_sector,
             reg_code: search_result.reg_code,
+            vat: search_result.vat,
+            vat_number: search_result.vat_number,
         };
         search_results.push(company);
     }

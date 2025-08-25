@@ -4,12 +4,14 @@ use crate::company::notmalize::normalize_string;
 use crate::company::parse_address::parse_address;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
+use std::collections::HashSet;
 use std::error::Error;
 use std::io::Cursor;
 
 pub async fn import_companies_from_csv(
     conn: &mut Connection,
     mut rdr: Reader<Cursor<String>>,
+    vat_table: HashSet<String>,
 ) -> Result<(), Box<dyn Error>> {
     // CREATE TABLE, IF DOES NOT EXIST
     Company::create_table(&conn).await?;
@@ -21,7 +23,7 @@ pub async fn import_companies_from_csv(
 
     {
         let mut stmt = transaction.prepare(
-                "INSERT INTO company (legal_form, name, city, address, zip, normal_name, public_sector, reg_code) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+                "INSERT INTO company (legal_form, name, city, address, zip, normal_name, public_sector, reg_code, vat, vat_number) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
             )?;
         for result in rdr.deserialize() {
             let input_company: InputCompany = result?;
@@ -31,6 +33,15 @@ pub async fn import_companies_from_csv(
                 let (name, normal_name) =
                     get_name_and_normal_name(input_company.name_in_quotes, input_company.name);
                 let (city, address) = get_city_and_address(input_company.address);
+
+                let mut vat = false;
+                let mut vat_number = None;
+                if vat_table.contains(&input_company.regcode) {
+                    vat = true;
+                    let number = format!("LV{}", input_company.regcode);
+                    vat_number = Some(number);
+                }
+
                 stmt.execute(params![
                     input_company.r#type,
                     name,
@@ -40,6 +51,8 @@ pub async fn import_companies_from_csv(
                     normal_name,
                     "0".to_string(),
                     input_company.regcode,
+                    vat,
+                    vat_number
                 ])?;
             }
         }
