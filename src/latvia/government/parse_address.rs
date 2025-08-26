@@ -58,7 +58,7 @@ pub fn parse_gov_address(address: &str) -> (String, String, String) {
 
 #[cfg(test)]
 mod tests {
-    use crate::public_institution::parse_address::parse_gov_address;
+    use crate::latvia::government::parse_address::parse_gov_address;
 
     #[test]
     fn public_institution_address_parsing() {

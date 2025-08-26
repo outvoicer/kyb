@@ -1,5 +1,5 @@
 use crate::config::KybConfig;
-use crate::public_institution::import::import_public_institutions_from_csv;
+use crate::latvia::government::import::import_public_institutions_from_csv;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use reqwest::get;
