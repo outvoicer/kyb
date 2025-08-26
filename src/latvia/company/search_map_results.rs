@@ -15,7 +15,6 @@ struct SearchResult {
 }
 
 pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<dyn Error>> {
-    //let mut search_results: Vec<SearchResult> = Vec::new();
     let mut results = Vec::new();
 
     while let Some(row) = rows.next()? {
