@@ -18,7 +18,7 @@ pub async fn fetch_and_store_data(
     conn: &mut PooledConnection<SqliteConnectionManager>,
 ) -> Result<(), Box<dyn Error>> {
     print("Get new data");
-    let url = KybConfig::SOURCE_CSV;
+    let url = KybConfig::SOURCE_MEMBER_OF_BOARD;
     let response = get(url).await?.text().await?;
     let cursor = Cursor::new(response);
 
