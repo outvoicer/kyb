@@ -16,10 +16,13 @@ pub async fn one_lv_air_message(
     mut session: &mut Session,
     msg: Result<AggregatedMessage, ProtocolError>,
 ) -> Result<(), KybError> {
+    // GET DB FOR SESSION
     let conn: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
+    // HANDLE MSG AND PING
     match msg {
         Ok(AggregatedMessage::Text(bytes)) => {
+            // HANDLE ONE MESSAGE
             // SERIALIZE
             match serde_json::from_slice::<CompanySearchQuery>(&bytes.as_bytes()) {
                 Ok(query) => {
@@ -36,10 +39,10 @@ pub async fn one_lv_air_message(
                 }
                 Err(e) => {
                     // Deserialization failed
-                    println!("Failed to deserialize message: {:?}", e);
+                    // println!("Failed to deserialize message: {:?}", e);
                     let respo = AirSearchResponse {
                         result: None,
-                        error: Some("Did not understand message".to_string()),
+                        error: Some("Failed to deserialize message".to_string()),
                     };
                     let _ = send_message(&mut session, respo).await;
                     Ok(())
@@ -65,7 +68,6 @@ pub struct AirSearchResponse {
 
 async fn send_message(session: &mut Session, input: AirSearchResponse) -> Result<(), KybError> {
     let payload = serde_json::to_string(&input)?;
-    //session.text(payload).await;
     if let Err(e) = &session.text(payload).await {
         return Err(KybError::StringError(e.to_string()));
     }
