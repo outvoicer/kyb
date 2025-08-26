@@ -3,7 +3,6 @@ mod db;
 mod error;
 mod latvia;
 mod tasks;
-mod verify;
 
 use crate::tasks::cli::cli;
 use crate::tasks::start::start_kyb_server;

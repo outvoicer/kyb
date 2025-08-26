@@ -1,7 +1,7 @@
-use crate::db::query::Query;
 use crate::error::KybError;
-use crate::verify::is_board_member::is_board_member;
-use crate::verify::validate::validate_data;
+use crate::latvia::board::query::Query;
+use crate::latvia::board::verify::is_board_member::is_board_member;
+use crate::latvia::board::verify::validate::validate_data;
 use rusqlite::Connection;
 
 pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(), KybError> {
@@ -13,7 +13,7 @@ pub async fn validate_and_verify(conn: &Connection, query: &Query) -> Result<(),
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::verify::setup_test_db::setup_test_db;
+    use crate::latvia::board::verify::setup_test_db::setup_test_db;
     use actix_web::test;
 
     #[test]

@@ -1,7 +1,7 @@
-use crate::db::log::log;
-use crate::db::query::Query;
 use crate::error::KybError;
-use crate::verify::validate_and_verify::validate_and_verify;
+use crate::latvia::board::log::log;
+use crate::latvia::board::query::Query;
+use crate::latvia::board::verify::validate_and_verify::validate_and_verify;
 use actix_web::web;
 use rusqlite::Connection;
 

@@ -1,4 +1,5 @@
-use crate::{db::query::Query, error::KybError};
+use crate::error::KybError;
+use crate::latvia::board::query::Query;
 use chrono::Local;
 use rusqlite::{Connection, params};
 

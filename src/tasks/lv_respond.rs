@@ -1,6 +1,6 @@
 use crate::db::get_db::Pool;
-use crate::db::query::Query;
 use crate::error::KybError;
+use crate::latvia::board::query::Query;
 use crate::tasks::lv_handle::handle_lv;
 use actix_web::{HttpResponse, Responder, web};
 use r2d2::PooledConnection;

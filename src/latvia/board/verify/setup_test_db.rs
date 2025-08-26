@@ -1,4 +1,4 @@
-use crate::db::create_table::create_table;
+use crate::latvia::board::create_table::create_table;
 use rusqlite::{Connection, params};
 
 #[allow(dead_code)]

@@ -1,5 +1,5 @@
-use crate::db::query::Query;
 use crate::error::KybError;
+use crate::latvia::board::query::Query;
 use rusqlite::{Connection, params};
 
 pub async fn is_board_member(conn: &Connection, query: &Query) -> Result<(), KybError> {

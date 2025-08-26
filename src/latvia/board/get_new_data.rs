@@ -1,6 +1,6 @@
 use crate::config::KybConfig;
 use crate::db::Officer;
-use crate::db::create_table::create_table;
+use crate::latvia::board::create_table::create_table;
 use chrono::Local;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;

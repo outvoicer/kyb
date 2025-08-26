@@ -1,23 +1,19 @@
 pub mod app_folder;
 pub mod create_home_dir;
-pub mod create_table;
 pub mod db_file;
 pub mod get_db;
-pub mod get_new_data;
-pub mod log;
-pub mod query;
 
 #[allow(dead_code)]
 #[derive(Debug, serde::Deserialize)]
-struct Officer {
+pub struct Officer {
     id: i32,
     uri: String,
-    at_legal_entity_registration_number: String,
+    pub at_legal_entity_registration_number: String,
     entity_type: String,
-    position: Option<String>,
+    pub position: Option<String>,
     governing_body: String,
-    name: String,
-    latvian_identity_number_masked: String,
+    pub name: String,
+    pub latvian_identity_number_masked: String,
     birth_date: Option<String>,
     legal_entity_registration_number: Option<String>,
     rights_of_representation_type: String,
