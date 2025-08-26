@@ -14,7 +14,7 @@ Business tools for Latvian KYB procedures.
 - results limited to 10 results
 
 # Update and logging
-- Keeps a local db of everything
+- Keeps a local ~ 60 mb db of companies, public institutions and members of board
 - Updates itself every night from Latvian Open Data portal.
 - Logs verification results and errors.
 - Logs searches and results
@@ -65,10 +65,8 @@ asdf
 ```
 
 # Considerations - Company search and VAT
-```
-Assumes reg code (40203572370) and VAT Number (LV40203572370) number part match.
-There are companies with a registration code 000703116, so we use string for this.
-```
+- Assumes reg code (40203572370) and VAT Number (LV40203572370) number part match.
+- There are companies with a registration code 000703116, so we use string for this.
 
 # Try member board validation
 ```
@@ -88,7 +86,7 @@ Empty response - I have used .unwrap()
 ```
 
 # Considerations for Members of board validation:
-+ Only first part of personal_code is matched, therefore we have "201292-*****" in sample. Second part comes anonymised in source.
++ Only first part of personal_code is matched, therefore we have "201292-*****" in sample. Second part comes anonymised from source.
 + Person name order is lastname + firstname.
 + Person name has to be exact match (Bērziņš Jānis, not Berzins Janis)
 + Reg code has to be exact match and 11 characters (cannot have LV in beginning).
