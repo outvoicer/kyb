@@ -5,7 +5,7 @@ use crate::latvia::board::verify::validate_and_verify::validate_and_verify;
 use actix_web::web;
 use rusqlite::Connection;
 
-pub async fn handle_lv(db: &Connection, query: web::Json<Query>) -> Result<i64, KybError> {
+pub async fn lv_board_handle(db: &Connection, query: web::Json<Query>) -> Result<i64, KybError> {
     //let db = get_db()?;
     match validate_and_verify(&db, &query).await {
         Ok(_) => {
