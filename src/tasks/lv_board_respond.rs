@@ -1,12 +1,13 @@
 use crate::db::get_db::Pool;
 use crate::error::KybError;
+use crate::latvia::board::lv_board_handle::lv_board_handle;
 use crate::latvia::board::query::Query;
-use crate::tasks::lv_board_handle::lv_board_handle;
 use actix_web::{HttpResponse, Responder, web};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 
 pub async fn lv_board_respond(pool: web::Data<Pool>, query: web::Json<Query>) -> impl Responder {
+    // GET DB
     let db: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
 

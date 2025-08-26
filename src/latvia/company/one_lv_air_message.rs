@@ -1,8 +1,8 @@
 use crate::db::get_db::Pool;
 use crate::error::KybError;
 use crate::latvia::company::company::Company;
-use crate::tasks::lv_company_search_handle::CompanySearchQuery;
-use crate::tasks::lv_company_search_handle::lv_company_search_handle;
+use crate::latvia::company::lv_company_search_handle::CompanySearchQuery;
+use crate::latvia::company::lv_company_search_handle::lv_company_search_handle;
 use actix_web::web;
 use actix_ws::AggregatedMessage;
 use actix_ws::ProtocolError;

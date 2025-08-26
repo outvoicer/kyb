@@ -1,6 +1,7 @@
 pub mod create_table;
 pub mod get_new_data;
 pub mod log;
+pub mod lv_board_handle;
 pub mod query;
 pub mod verify;
 
