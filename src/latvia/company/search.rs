@@ -52,8 +52,8 @@ impl Company {
 
 #[cfg(test)]
 mod tests {
-    use crate::latvia::company::create_test_db::create_test_db;
     use crate::latvia::company::get_first_result::get_first_result;
+    use crate::tasks::create_test_db::create_test_db;
     use actix_web::test;
     use r2d2::PooledConnection;
     use r2d2_sqlite::SqliteConnectionManager;

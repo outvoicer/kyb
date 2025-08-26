@@ -37,7 +37,7 @@ pub async fn one_lv_air_message(
                     send_message(&mut session, respo).await?;
                     Ok(())
                 }
-                Err(e) => {
+                Err(_e) => {
                     // Deserialization failed
                     // println!("Failed to deserialize message: {:?}", e);
                     let respo = AirSearchResponse {

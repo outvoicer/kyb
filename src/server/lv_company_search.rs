@@ -35,7 +35,7 @@ pub async fn lv_company_search(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::latvia::company::create_test_db::create_test_db;
+    use crate::tasks::create_test_db::create_test_db;
     use actix_web::{App, test, web};
     use serde_json::json;
     use std::time::{Duration, Instant};
