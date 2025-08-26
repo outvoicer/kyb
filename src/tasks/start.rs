@@ -1,5 +1,5 @@
+use crate::server::server::start_server;
 use crate::tasks::schedule::schedule_update;
-use crate::tasks::server::start_server;
 use actix_rt::spawn;
 
 pub async fn start_kyb_server() {

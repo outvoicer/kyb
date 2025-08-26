@@ -1,8 +1,8 @@
 use crate::config::KybConfig;
 use crate::db::get_db::get_db;
-use crate::tasks::lv_board_respond::lv_board_respond;
-use crate::tasks::lv_company_search::lv_company_search;
-use crate::tasks::lv_company_search_air::lv_company_search_air;
+use crate::server::lv_board_respond::lv_board_respond;
+use crate::server::lv_company_search::lv_company_search;
+use crate::server::lv_company_search_air::lv_company_search_air;
 use actix_web::{App, HttpServer, web};
 use std::io::{Error, ErrorKind};
 

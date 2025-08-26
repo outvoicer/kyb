@@ -2,6 +2,7 @@ mod config;
 mod db;
 mod error;
 mod latvia;
+mod server;
 mod tasks;
 
 use crate::tasks::cli::cli;
