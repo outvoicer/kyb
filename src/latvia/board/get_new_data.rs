@@ -1,5 +1,5 @@
 use crate::config::KybConfig;
-use crate::db::Officer;
+use crate::latvia::board::Officer;
 use crate::latvia::board::create_table::create_table;
 use chrono::Local;
 use r2d2::PooledConnection;
