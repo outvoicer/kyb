@@ -1,5 +1,5 @@
-use crate::company::company::Company;
-use crate::company::log::create_table::create_company_log_table;
+use crate::latvia::company::company::Company;
+use crate::latvia::company::log::create_table::create_company_log_table;
 use rusqlite::Connection;
 use std::error::Error;
 

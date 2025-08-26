@@ -1,4 +1,4 @@
-use crate::company::company::Company;
+use crate::latvia::company::company::Company;
 use chrono::Local;
 use rusqlite::{Connection, params};
 

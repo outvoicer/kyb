@@ -1,6 +1,6 @@
-use crate::company::company::Company;
-use crate::company::log::log::log_search;
 use crate::error::KybError;
+use crate::latvia::company::company::Company;
+use crate::latvia::company::log::log::log_search;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 

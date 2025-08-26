@@ -1,5 +1,5 @@
-use crate::company::import::import_companies_from_csv;
 use crate::config::KybConfig;
+use crate::latvia::company::import::import_companies_from_csv;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use reqwest::get;

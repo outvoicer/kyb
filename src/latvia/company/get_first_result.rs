@@ -1,4 +1,4 @@
-use crate::company::company::Company;
+use crate::latvia::company::company::Company;
 //use crate::company::search::search_by_name;
 use rusqlite::Connection;
 use std::error::Error;

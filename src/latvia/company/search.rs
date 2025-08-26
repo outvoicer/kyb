@@ -1,8 +1,8 @@
-use crate::company::clean_name::clean_company_name;
-use crate::company::company::Company;
-use crate::company::log::log::log_search;
-use crate::company::notmalize::normalize_string;
-use crate::company::search_map_results::search_map_results;
+use crate::latvia::company::clean_name::clean_company_name;
+use crate::latvia::company::company::Company;
+use crate::latvia::company::log::log::log_search;
+use crate::latvia::company::notmalize::normalize_string;
+use crate::latvia::company::search_map_results::search_map_results;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;
 
@@ -52,8 +52,8 @@ impl Company {
 
 #[cfg(test)]
 mod tests {
-    use crate::company::create_test_db::create_test_db;
-    use crate::company::get_first_result::get_first_result;
+    use crate::latvia::company::create_test_db::create_test_db;
+    use crate::latvia::company::get_first_result::get_first_result;
     use actix_web::test;
     use r2d2::PooledConnection;
     use r2d2_sqlite::SqliteConnectionManager;

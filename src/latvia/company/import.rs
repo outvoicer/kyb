@@ -1,7 +1,7 @@
-use crate::company::company::Company;
-use crate::company::input_company::InputCompany;
-use crate::company::notmalize::normalize_string;
-use crate::company::parse_address::parse_address;
+use crate::latvia::company::company::Company;
+use crate::latvia::company::input_company::InputCompany;
+use crate::latvia::company::notmalize::normalize_string;
+use crate::latvia::company::parse_address::parse_address;
 use crate::latvia::vat::vat_status::vat_status;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
@@ -83,8 +83,8 @@ pub fn get_name_and_normal_name(name_1: String, name_2: String) -> (String, Stri
 
 #[cfg(test)]
 mod tests {
-    use crate::company::create_test_db::create_test_db;
-    use crate::company::get_first_result::get_first_result;
+    use crate::latvia::company::create_test_db::create_test_db;
+    use crate::latvia::company::get_first_result::get_first_result;
     use actix_web::test;
     use r2d2::PooledConnection;
     use r2d2_sqlite::SqliteConnectionManager;

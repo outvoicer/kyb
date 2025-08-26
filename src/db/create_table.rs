@@ -1,5 +1,5 @@
-use crate::company::company::Company;
 use crate::error::KybError;
+use crate::latvia::company::company::Company;
 use rusqlite::{Connection, Result};
 
 pub async fn create_table(conn: &Connection) -> Result<(), KybError> {
