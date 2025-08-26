@@ -8,7 +8,7 @@ pub mod import;
 pub mod input_company;
 pub mod log;
 pub mod lv_company_search_handle;
-pub mod notmalize;
+pub mod normalize;
 pub mod one_lv_air_message;
 pub mod parse_address;
 pub mod search;

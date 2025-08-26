@@ -10,7 +10,7 @@ pub enum IsActive {
 
 #[allow(non_snake_case)]
 #[derive(Debug, Deserialize, Serialize, Clone)]
-/// schema for VAT
+/// schema for VAT from open data
 /// https://data.gov.lv/dati/dataset/9a5eae1c-2438-48cf-854b-6a2c170f918f/resource/610910e9-e086-4c5b-a7ea-0a896a697672/download/pdb_pvnmaksataji_odata.csv
 pub struct VATSchema {
     pub Numurs: String,         // VAT Number

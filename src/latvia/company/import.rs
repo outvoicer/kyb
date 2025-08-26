@@ -1,6 +1,6 @@
 use crate::latvia::company::company::Company;
 use crate::latvia::company::input_company::InputCompany;
-use crate::latvia::company::notmalize::normalize_string;
+use crate::latvia::company::normalize::normalize_string;
 use crate::latvia::company::parse_address::parse_address;
 use crate::latvia::vat::vat_status::vat_status;
 use csv::Reader;

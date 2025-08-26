@@ -21,7 +21,7 @@ pub async fn get_vat_data(
         }
     }
 
-    println!("VAT numbers: {}", vat_map.len());
+    println!("total VAT numbers: {}", vat_map.len());
 
     Ok(vat_map)
 }
