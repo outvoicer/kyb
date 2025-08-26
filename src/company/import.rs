@@ -2,7 +2,7 @@ use crate::company::company::Company;
 use crate::company::input_company::InputCompany;
 use crate::company::notmalize::normalize_string;
 use crate::company::parse_address::parse_address;
-use crate::vat::vat_status::vat_status;
+use crate::latvia::vat::vat_status::vat_status;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::collections::HashSet;

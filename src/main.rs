@@ -2,9 +2,9 @@ mod company;
 mod config;
 mod db;
 mod error;
+mod latvia;
 mod public_institution;
 mod tasks;
-mod vat;
 mod verify;
 
 use crate::tasks::cli::cli;

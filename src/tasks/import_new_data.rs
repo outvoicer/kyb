@@ -1,8 +1,8 @@
 use crate::company::get_new_company_data::fetch_new_company_data;
 use crate::db::get_db::get_db;
 use crate::db::get_new_data::fetch_and_store_data;
+use crate::latvia::vat::get_new_data::fetch_new_vat_data;
 use crate::public_institution::get_new_data::fetch_new_public_institution_data;
-use crate::vat::get_new_data::fetch_new_VAT_data;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use std::error::Error;
@@ -18,7 +18,7 @@ pub async fn import_new_data() -> Result<(), Box<dyn Error>> {
                 eprintln!("Error with member of board data: {}", e);
             }
 
-            let vat_table = fetch_new_VAT_data().await?;
+            let vat_table = fetch_new_vat_data().await?;
 
             // GET COMPANIES
             if let Err(e) = fetch_new_company_data(&mut conn, &vat_table).await {

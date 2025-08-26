@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// is VAT turned on? "ir" - yes, "nav" - no
+#[allow(non_camel_case_types)]
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub enum IsActive {
     ir,

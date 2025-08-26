@@ -1,8 +1,8 @@
 use crate::company::company::Company;
 use crate::company::notmalize::normalize_string;
+use crate::latvia::vat::vat_status::vat_status;
 use crate::public_institution::parse_address::parse_gov_address;
 use crate::public_institution::public_institution::PublicInstitution;
-use crate::vat::vat_status::vat_status;
 use csv::Reader;
 use rusqlite::{Connection, Result, params};
 use std::collections::HashSet;

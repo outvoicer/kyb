@@ -1,8 +1,8 @@
 use crate::company::company::Company;
 use crate::company::import::import_companies_from_csv;
 use crate::db::get_db::Pool;
+use crate::latvia::vat::read_sample_data::read_sample_vat_data;
 use crate::public_institution::import::import_public_institutions_from_csv;
-use crate::vat::read_sample_data::read_sample_vat_data;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use std::error::Error;

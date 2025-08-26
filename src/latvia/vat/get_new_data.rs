@@ -1,5 +1,5 @@
 use crate::config::KybConfig;
-use crate::vat::import::get_vat_data;
+use crate::latvia::vat::import::get_vat_data;
 use csv::ReaderBuilder;
 use reqwest::get;
 use rusqlite::Result;
@@ -7,7 +7,7 @@ use std::collections::HashSet;
 use std::error::Error;
 use std::io::Cursor;
 
-pub async fn fetch_new_VAT_data() -> Result<HashSet<String>, Box<dyn Error>> {
+pub async fn fetch_new_vat_data() -> Result<HashSet<String>, Box<dyn Error>> {
     let url = KybConfig::SOURCE_VAT;
     println!("getting {}", url);
     let response = get(url).await?.text().await?;

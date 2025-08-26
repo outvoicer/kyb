@@ -1,4 +1,4 @@
-use crate::vat::vat::{IsActive, VATSchema};
+use crate::latvia::vat::vat::{IsActive, VATSchema};
 use csv::Reader;
 use std::collections::HashSet;
 use std::error::Error;

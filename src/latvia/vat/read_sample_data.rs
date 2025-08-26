@@ -1,4 +1,4 @@
-use crate::vat::import::get_vat_data;
+use crate::latvia::vat::import::get_vat_data;
 use csv::ReaderBuilder;
 use std::collections::HashSet;
 use std::error::Error;
@@ -8,7 +8,7 @@ use std::io::{Cursor, Read};
 #[allow(dead_code)]
 pub async fn read_sample_vat_data() -> Result<HashSet<String>, Box<dyn Error>> {
     // GET SAMPLE DATA
-    let path = "./src/vat/vat.csv";
+    let path = "./src/latvia/vat/vat.csv";
     let mut file = File::open(path)?;
     let mut contents = String::new();
     let _ = file.read_to_string(&mut contents)?;
