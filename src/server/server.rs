@@ -14,7 +14,6 @@ pub async fn start_server() -> std::io::Result<()> {
             HttpServer::new(move || {
                 App::new()
                     .app_data(web::Data::new(db.clone()))
-                    // .route("/lv", web::post().to(lv_board_respond))
                     .route("/lv/board", web::post().to(lv_board_respond))
                     .route("/lv/company", web::post().to(lv_company_search))
                     .route("/lv/air", web::get().to(lv_company_search_air))
