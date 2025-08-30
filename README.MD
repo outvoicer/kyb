@@ -157,6 +157,10 @@ Then:
 sudo systemctl enable kyb
 sudo systemctl start kyb
 ```
+Logs:
+```
+journalctl -u kyb.service
+```
 
 # Company
 ```

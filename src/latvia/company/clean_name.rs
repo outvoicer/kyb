@@ -1,6 +1,6 @@
 /// Remove SIA and AS from beginning of search
 pub fn clean_company_name(input_name: &str) -> &str {
-    let prefixes = vec!["SIA ", "AS "];
+    let prefixes = vec!["SIA ", "AS ", "sia ", "as "];
 
     for prefix in &prefixes {
         if input_name.starts_with(prefix) {
