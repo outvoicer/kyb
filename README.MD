@@ -117,6 +117,10 @@ here you can set server address + port and schedule db update time.
 
 # Build
 ```
+// curl https://sh.rustup.rs -sSf | sh
+// sudo apt install build-essential
+// apt install libssl-dev
+// apt install pkg-config
 // sudo apt-get install libsqlite3-dev
 cargo build --release
 ```
