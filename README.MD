@@ -67,9 +67,9 @@ asdf
 
 # Considerations - Company search and VAT
 + Assumes reg code (40203572370) and VAT Number (LV40203572370) number part match.
-++ Because of this, the system currently gives false negatives (does not indicate VAT when it should) in cases when company reg code and VAT number do not match. This is the case usually with bigger corporations and governmental institutions. This could be fixed on request - it is this way as it does not disturb our own main use cases too much yet - we use it for company registration and buyer registration. One obvious place where it would be needed is the case of international invoices - there the 0% export VAT is not applied when VAT number is not indicated. We pledge to fix it on first customer request (which would be a non-Latvian organisation using us and wanting to send an invoice to a Latvian corporation or governmental institution).
-++ The reason why it is this way, is because the open data VAT registry has "VAT Number" and "Name" fields, but no "Registration code" field, so matching it with the name may require a bit of extra engineering, as there is the freedom to either write SIA in from or after your business name and some other quirks. 
-- There are companies with a registration code 000703116, so we use string for reg code field.
++ Because of this, the system currently gives false negatives (does not indicate VAT when it should) in cases when company reg code and VAT number do not match. This is the case usually with bigger corporations and governmental institutions. This could be fixed on request - it is this way as it does not disturb our own main use cases too much yet - we use it for company registration and buyer registration. One obvious place where it would be needed is the case of international invoices - there the 0% export VAT is not applied when VAT number is not indicated. We pledge to fix it on first customer request (which would be a non-Latvian organisation using us and wanting to send an invoice to a Latvian corporation or governmental institution).
++ The reason why it is this way, is because the open data VAT registry has "VAT Number" and "Name" fields, but no "Registration code" field, so matching it with the name may require a bit of extra engineering, as there is the freedom to either write SIA in from or after your business name and some other quirks. 
++ There are companies with a registration code 000703116, so we use string for reg code field.
 
 # Try member board validation
 ```
