@@ -2,7 +2,7 @@ Business tools for Latvian KYB procedures.
 
 # Validate Latvian member of board
 - Send person name, personal id and company registration code.
-- Receive confirmation, when this person is a member of board.
+- Receive confirmation if this person is a member of board.
 
 # Search Latvian company or government institution
 - REST API and websocket support.
@@ -37,10 +37,11 @@ Runs by default at 127.0.0.1:10001
 curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond fantastic "}'
 
 Response:
-[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Mellužu prospekts 76","zip":"2008","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}]
+[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 123","zip":"1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}]
 
 Search "", get []
-Errors are not returned, enpty array [] is returned.
+
+Errors are not returned, enpty array [] is returned instead.
 ```
 # Websocket company search:
 ```
@@ -49,7 +50,7 @@ ws ws://127.0.0.1:10001/lv/air
 {"name": "Raimond fantastic"}
 
 Response:
-{"result":[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Mellužu prospekts 76","zip":"2008","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}],"error":null}
+{"result":[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 1","zip":"1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}],"error":null}
 
 or
 {"name": "asdfadsf"}
