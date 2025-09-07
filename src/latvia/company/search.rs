@@ -136,9 +136,7 @@ mod tests {
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.vat, true);
         assert_eq!(result.vat_number, Some("LV90000069281".to_string()));
-        // TBD VID
-
-        // TBD - SEND PRECICE MATCH FIRST
+        // SEND PRECICE MATCH FIRST
         let search_term = "Laik".to_string();
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, "40003922099".to_string());

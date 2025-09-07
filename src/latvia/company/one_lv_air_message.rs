@@ -38,8 +38,6 @@ pub async fn one_lv_air_message(
                     Ok(())
                 }
                 Err(_e) => {
-                    // Deserialization failed
-                    // println!("Failed to deserialize message: {:?}", e);
                     let respo = AirSearchResponse {
                         result: None,
                         error: Some("Failed to deserialize message".to_string()),
