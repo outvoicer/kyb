@@ -169,16 +169,5 @@ Logs:
 journalctl -u kyb.service
 ```
 
-# Company
-```
-Company::search_by_name(&Connection, &String)
-Company::create_table(conn)
-
-```
-# Random
-longest name is 151 chars: "JURIDISKU SŪDZĪBU RAKSTĪŠANAS BIEDRĪBA, BIZNESA UN JURIDISKĀS KONSULTĀCIJAS, PĀRSTĀVĪBA, AIZSTĀVĪBA, CILVĒKTIESĪBU AIZSTĀVĪBA, BĒRNU UN SPORTA PASĀKUMI"
-
-Original size of company registry: 125 MB
-Only name, "SIA", city, address, index: 45 MB
-+ only existing companies: 26 mb
-+ companies, gov instututions, VAT numbers and normalized name and all Latvian board member data: 56.4 MB
+# Licensing
+All rights reserved. If you need a license, please contact martin@outvoicer.com
