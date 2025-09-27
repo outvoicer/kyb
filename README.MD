@@ -19,6 +19,9 @@ Business tools for Latvian KYB procedures.
 - Logs verification results and errors.
 - Logs searches and results
 
+# Mac and Linux executables
++ are abailable /release/ folder
+
 # Install DB
 ```
 cargo run install
@@ -45,7 +48,9 @@ Errors are not returned, enpty array [] is returned instead.
 ```
 # Websocket company search:
 ```
-// assumes websocket client is installed as "ws"
+Sample ws frontend client is in /release/client.js
+
+// the following assumes some websocket client is installed as "ws"
 ws ws://127.0.0.1:10001/lv/air
 {"name": "Raimond fantastic"}
 
