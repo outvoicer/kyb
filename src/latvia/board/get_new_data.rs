@@ -17,7 +17,7 @@ fn print(text: &str) {
 pub async fn fetch_and_store_data(
     conn: &mut PooledConnection<SqliteConnectionManager>,
 ) -> Result<(), Box<dyn Error>> {
-    print("Get new data");
+    print("Get new members of board");
     let url = KybConfig::SOURCE_MEMBER_OF_BOARD;
     let response = get(url).await?.text().await?;
     let cursor = Cursor::new(response);
@@ -26,7 +26,7 @@ pub async fn fetch_and_store_data(
         .delimiter(b';')
         .from_reader(cursor);
 
-    print("Store data");
+    print("Store members of board");
     // CREATE TABLE, IF DOES NOT EXIST
     create_table(&conn).await?;
     // DELETE ALL EXISTING RECORDS
