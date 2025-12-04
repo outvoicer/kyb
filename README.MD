@@ -40,7 +40,7 @@ Runs by default at 127.0.0.1:10001
 curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond fantastic "}'
 
 Response:
-[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 123","zip":"1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}]
+[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 123","zip":"LV-1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}]
 
 Search "", get []
 
@@ -55,7 +55,7 @@ ws ws://127.0.0.1:10001/lv/air
 {"name": "Raimond fantastic"}
 
 Response:
-{"result":[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 1","zip":"1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}],"error":null}
+{"result":[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 1","zip":"LV-1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}],"error":null}
 
 or
 {"name": "asdfadsf"}
