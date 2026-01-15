@@ -35,21 +35,12 @@ pub async fn search_map_results(mut rows: Rows<'_>) -> Result<Vec<Company>, Box<
     let mut search_results: Vec<Company> = Vec::new();
 
     for search_result in results {
-        // ADD LV- in from of ZIP number
-        let zip = match search_result.zip {
-            Some(zip) => {
-                let str = format!("LV-{}", zip);
-                Some(str)
-            }
-            None => None,
-        };
-
         let company = Company {
             legal_form: search_result.legal_form,
             name: search_result.name,
             city: search_result.city,
             address: search_result.address,
-            zip: zip,
+            zip: search_result.zip,
             public_sector: search_result.public_sector,
             reg_code: search_result.reg_code,
             vat: search_result.vat,

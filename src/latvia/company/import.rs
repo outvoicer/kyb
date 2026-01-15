@@ -37,12 +37,20 @@ pub async fn import_companies_from_csv(
 
                 let (vat, vat_number) = vat_status(&input_company.regcode, &vat_table);
 
+                let zip = match input_company.index {
+                    Some(index) => {
+                        let i = format!("LV-{}", index);
+                        Some(i)
+                    }
+                    None => None,
+                };
+
                 stmt.execute(params![
                     input_company.r#type,
                     name,
                     city,
                     address,
-                    input_company.index,
+                    zip,
                     normal_name,
                     "0".to_string(),
                     input_company.regcode,
@@ -93,6 +101,7 @@ mod tests {
     async fn company_import_from_sample() {
         let search_term_1 = "House of Glory".to_string();
         let reg_code_1 = "40008234596".to_string();
+        let zip_1 = Some("LV-1019".to_string());
 
         let pool = create_test_db().await.unwrap();
         let conn: PooledConnection<SqliteConnectionManager> =
@@ -104,6 +113,7 @@ mod tests {
             first_result.reg_code, reg_code_1,
             "The registration code does not match the expected value."
         );
+        assert_eq!(first_result.zip, zip_1, "The zip codes don't match.");
         // THIS SEARCH SHOULD NOT FIND
         // DO NOT GET "VALKRĪG" (44102037886) AS IT'S DELETED
         let search_term_2 = "VALKRĪG".to_string();
