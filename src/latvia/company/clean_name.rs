@@ -5,7 +5,7 @@ pub fn clean_company_name(input_name: &str) -> String {
 
     // Remove apostrophes
     // Remove apostrophes
-    let mut cleaned_name = input_name.replace("'", "");
+    let mut cleaned_name = input_name.replace("'", "").replace("\"", "");
 
     for prefix in &prefixes {
         if cleaned_name.starts_with(prefix) {
@@ -43,6 +43,10 @@ mod tests {
         assert_eq!(result, "Raimond fantastic".to_string(),);
         // apostrofe
         let search_term = "SIA 'Raimond fantastic".to_string();
+        let result = clean_company_name(&search_term);
+        assert_eq!(result, "Raimond fantastic".to_string(),);
+        // ""
+        let search_term = "SIA \"Raimond fantastic\"".to_string();
         let result = clean_company_name(&search_term);
         assert_eq!(result, "Raimond fantastic".to_string(),);
     }
