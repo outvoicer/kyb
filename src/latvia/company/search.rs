@@ -141,4 +141,26 @@ mod tests {
         let result = get_first_result(&conn, &search_term).await.unwrap();
         assert_eq!(result.reg_code, "40003922099".to_string());
     }
+    #[test]
+    async fn sia_prefix_and_sufix() {
+        let pool = create_test_db().await.unwrap();
+        let conn: PooledConnection<SqliteConnectionManager> =
+            pool.get().expect("Couldn't get db connection from pool");
+        // PREFIX
+        let search_term = "SIA Raimond fantastic".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(
+            result.reg_code,
+            "40203572370".to_string(),
+            "Wrong seartch result."
+        );
+        // SUFFIX
+        let search_term = "Raimond fantastic SIA".to_string();
+        let result = get_first_result(&conn, &search_term).await.unwrap();
+        assert_eq!(
+            result.reg_code,
+            "40203572370".to_string(),
+            "Wrong seartch result."
+        );
+    }
 }
