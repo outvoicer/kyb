@@ -1,7 +1,7 @@
 use crate::db::get_db::Pool;
 use crate::error::KybError;
-use crate::latvia::company::lv_company_search_handle::CompanySearchQuery;
-use crate::latvia::company::lv_company_search_handle::lv_company_search_handle;
+use crate::latvia::company::search::lv_company_search_handle::CompanySearchQuery;
+use crate::latvia::company::search::lv_company_search_handle::lv_company_search_handle;
 use actix_web::{HttpResponse, Responder, web};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;

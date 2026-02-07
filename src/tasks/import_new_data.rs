@@ -1,6 +1,6 @@
 use crate::db::get_db::get_db;
 use crate::latvia::board::get_new_data::fetch_and_store_data;
-use crate::latvia::company::get_new_company_data::fetch_new_company_data;
+use crate::latvia::company::import::get_new_company_data::fetch_new_company_data;
 use crate::latvia::government::get_new_data::fetch_new_public_institution_data;
 use crate::latvia::vat::get_new_data::fetch_new_vat_data;
 use r2d2::PooledConnection;

@@ -1,10 +1,7 @@
 pub mod air;
 pub mod company;
 pub mod db;
-pub mod get_first_result;
-pub mod get_new_company_data;
 pub mod import;
 pub mod log;
-pub mod lv_company_search_handle;
 pub mod normalize;
-pub mod search_map_results;
+pub mod search;

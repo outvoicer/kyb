@@ -19,7 +19,7 @@ pub async fn create_test_db() -> Result<Pool, Box<dyn Error>> {
     // ADD TABLE SCHEMA
     Company::create_table(&conn).await?;
     // GET SAMPLE DATA
-    let path = "./src/latvia/company/company.csv";
+    let path = "./src/latvia/company/import/company.csv";
     let mut file = File::open(path)?;
     let mut contents = String::new();
     let _ = file.read_to_string(&mut contents)?;
