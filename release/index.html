@@ -37,9 +37,10 @@
                 // SEARCH ON KEYPRESS
                 searchInput.addEventListener("input", function () {
                     const searchTerm = searchInput.value.trim();
-                    if (searchTerm && socket.readyState === WebSocket.OPEN) {
+                    if (searchTerm) {
+                        searchAir(searchTerm);
                         // IF SOCKET IS THERE, SEND SEARCH QUERY
-                        socket.send(JSON.stringify({ name: searchTerm }));
+                        //socket.send(JSON.stringify({ name: searchTerm }));
                     } else {
                         // SOCKET IS CLOSED
                         console.error(
