@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-/// Main schema for company register
+/// Main constructor for company register
 pub struct Company {
     pub legal_form: String,
     pub name: String,
