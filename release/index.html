@@ -12,41 +12,52 @@
         />
 
         <div id="results"></div>
-
         <script>
+            function listener(event) {
+                const resultsDiv = document.getElementById("results");
+                // PARSE RESULT,
+                // IT CAN BE SEARCH RESULT, PONG OR ERROR MESSAGE
+                let message = air.listen(event);
+                // RESULT IS AN ARRAY
+                if (message && message.result && message.result[0]) {
+                    // PRINT RESULTS TO DIV
+                    resultsDiv.innerHTML = "";
+                    for (let i = 0; i < message.result.length; i++) {
+                        resultsDiv.innerHTML += `<p>${JSON.stringify(message.result[i])}</p>`;
+                    }
+                } else {
+                    console.log("not");
+                }
+            }
+            function printMessage(socket) {
+                // REMOVE OLD
+                socket.removeEventListener("message", listener);
+                // ADD NEW
+                socket.addEventListener("message", listener);
+            }
+
             document.addEventListener("DOMContentLoaded", function () {
                 // GET ELEMENTS
                 const searchInput = document.getElementById("searchInput");
-                const resultsDiv = document.getElementById("results");
+                // START SOCKET
+                let socket = air.start();
+                socket.addEventListener("open", function (event) {
+                    // LISTEN TO MESSAGES IN SOCKET AND PRINT THEM
+                    printMessage(socket);
+                    // SEARCH ON KEYPRESS
+                    searchInput.addEventListener("input", function () {
+                        const searchTerm = searchInput.value.trim();
 
-                // GET SOCKET
-                let socket = startAir();
-
-                // LISTEN TO MESSAGES IN SOCKET
-                socket.addEventListener("message", function (event) {
-                    let result = listenToAir(event);
-                    if (result && result.result && result.result[0]) {
-                        // PRINT RESULTS TO DIV
-                        resultsDiv.innerHTML = "";
-                        for (let i = 0; i < result.result.length; i++) {
-                            resultsDiv.innerHTML += `<p>${JSON.stringify(result.result[i])}</p>`;
-                        }
-                    }
-                });
-
-                // SEARCH ON KEYPRESS
-                searchInput.addEventListener("input", function () {
-                    const searchTerm = searchInput.value.trim();
-                    if (searchTerm) {
-                        searchAir(searchTerm);
-                        // IF SOCKET IS THERE, SEND SEARCH QUERY
-                        //socket.send(JSON.stringify({ name: searchTerm }));
-                    } else {
-                        // SOCKET IS CLOSED
-                        console.error(
-                            "Cannot send to socket, connection is closed",
-                        );
-                    }
+                        air.search(searchTerm, function (err, result) {
+                            if (err) {
+                                console.error(err);
+                                // RESTART ON ERROR
+                                socket = air.start();
+                                // NEW LISTENER FOR NEW SOCKET
+                                printMessage(socket);
+                            }
+                        });
+                    });
                 });
             });
         </script>

@@ -1,12 +1,11 @@
-let socket;
-
-function startAir(event) {
+const air = (function () {
+  // OUR HERO OF THE DAY - SOCKET
+  let socket;
   const maxRetries = 3;
   let retryCount = 0;
 
   function connect() {
-    //socket = new WebSocket("ws://localhost:10001/lv/air");
-    socket = new WebSocket("wss://kyb.outvoicer.com/lv/air");
+    socket = new WebSocket("ws://localhost:10001/lv/air");
 
     socket.addEventListener("open", function (event) {
       console.log("Connected to air search");
@@ -31,52 +30,64 @@ function startAir(event) {
       console.error("WebSocket error: ", event);
       attemptReconnect();
     });
+
+    return socket;
   }
 
   function attemptReconnect() {
     if (retryCount < maxRetries) {
       retryCount++;
       console.log(`Attempting to reconnect... (${retryCount}/${maxRetries})`);
-      setTimeout(connect, 2000); // Wait 2 seconds before retrying
+      setTimeout(connect, 4000); // Wait 2 seconds before retrying
     } else {
       console.log("Max reconnection attempts reached. Giving up.");
     }
   }
 
-  connect();
-  return socket;
-}
-
-function listenToAir(event) {
-  try {
-    let data = JSON.parse(event.data);
-    if (data.pong) {
-      // PING RECEIVED A RECPONSE
-      return false;
-    } else if (
-      data &&
-      data.result &&
-      data.result.length &&
-      data.result.length > 0
-    ) {
-      return data;
-    }
-  } catch (err) {
-    console.error(err);
-    return false;
+  function start(event) {
+    return connect();
   }
-}
 
-function searchAir(searchTerm) {
-  socket.send(JSON.stringify({ name: searchTerm }));
-}
+  function listen(event) {
+    try {
+      let data = JSON.parse(event.data);
+      if (data.pong) {
+        // PING RECEIVED A RESPONSE
+        return false;
+      } else if (
+        data &&
+        data.result &&
+        data.result.length &&
+        data.result.length > 0
+      ) {
+        return data;
+      }
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
 
+  function search(searchTerm) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ name: searchTerm }));
+    } else {
+      console.error("Socket is not open. Cannot send search request.");
+    }
+  }
+
+  return {
+    start,
+    listen,
+    search,
+  };
+})();
 /*
 // USE IT:
-let socket = startAir();
+let socket = air.start();
 // LISTEN TO MESSAGES
 socket.addEventListener("message", function (event) {
-  let result = listenToAir(event);
+  let result = air.listen(event);
   if (result && result.result && result.result[0]) {
     console.log(result.result[0]);
   }
