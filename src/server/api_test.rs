@@ -10,13 +10,19 @@ pub async fn api_test(pool: web::Data<Pool>) -> impl Responder {
     // SEARCH FOR RAIMOND
     match Company::search_by_name(&db, &"Raimond Fantastic".to_string(), true).await {
         Ok(results) => {
-            // MAKE SURE RAIMOND FANTASTIC DATA IS THERE
-            if results[0].reg_code == "40203572370".to_string() {
-                return HttpResponse::Ok().json(serde_json::json!({ "test": true }));
+            // IS THERE FIRST RESULT
+            if let Some(first_result) = results.get(0) {
+                // IS IT RAIMOND FANTASTIC
+                if first_result.reg_code == "40203572370" {
+                    return HttpResponse::Ok().json(serde_json::json!({ "test": true }));
+                } else {
+                    // RAIMOND IS NOT THERE - DB IS EMPTY OR SOMETHING BAD HAS HAPPENED
+                    return HttpResponse::BadRequest()
+                        .json(serde_json::json!({ "error": "DB empty maybe" }));
+                }
             } else {
-                // RAIMOND IS MISSING
-                return HttpResponse::InternalServerError()
-                    .json(serde_json::json!({ "error": "Data missing" }));
+                // MOST LIKELY EMPTY DB
+                return HttpResponse::NotFound().json(serde_json::json!({ "error": "DB empty" }));
             }
         }
         Err(err) => {
