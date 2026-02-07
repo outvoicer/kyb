@@ -88,7 +88,7 @@ const air = (function () {
       );
       setTimeout(() => {
         socket = connect(); // Reconnect and update the socket
-      }, 4000); // Wait 4 seconds before retrying
+      }, 10000); // Wait 10 seconds before retrying
     } else {
       console.log("Air Max reconnection attempts reached. Giving up.");
     }
