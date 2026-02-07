@@ -16,6 +16,8 @@
             document.addEventListener("DOMContentLoaded", function () {
                 // GET ELEMENTS
                 const searchInput = document.getElementById("searchInput");
+                // FIND THE PLACE TO PRINT RESULTS
+                const resultsDiv = document.getElementById("results");
                 // START SOCKET
                 let socket = air.start();
                 // LISTEN TO document.airMessage FOR SUCCESFUL SEARCH RESULTS
@@ -27,8 +29,6 @@
                         event.detail.result.length &&
                         event.detail.result.length > 0
                     ) {
-                        // FIND PLACE TO PRINT
-                        const resultsDiv = document.getElementById("results");
                         // RESTART "CANVAS"
                         resultsDiv.innerHTML = "";
                         // WRITE

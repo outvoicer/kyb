@@ -5,7 +5,7 @@ Frontend client to perform Latvian company search by name over socket.
 + Connect to kyb server socket,
 + send messages
 + listen to messages (search results + errors)
-+ dispatch to front end
++ dispatch message to front end via document.airMessage & document.airError
 
 // MOST SIMPLE USAGE:
 // CREATE SOCKET
@@ -34,7 +34,7 @@ socket.addEventListener("open", function () {
   socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
 });
  */
-
+/// Client to kyb server
 const air = (function () {
   // OUR HERO OF THE DAY - SOCKET
   let socket;
@@ -108,7 +108,7 @@ const air = (function () {
     }
   }
 
-  // START IS CONNECT
+  /// Initiate connection
   function start(event) {
     return connect();
   }
@@ -133,7 +133,7 @@ const air = (function () {
       return false;
     }
   }
-
+  /// Send search request to socket
   function search(searchTerm) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ name: searchTerm }));
