@@ -1,6 +1,6 @@
 use crate::db::get_db::Pool;
 use crate::latvia::company::company::Company;
-use crate::latvia::company::import::import_companies_from_csv;
+use crate::latvia::company::import::import::import_companies_from_csv;
 use crate::latvia::government::import::import_public_institutions_from_csv;
 use crate::latvia::vat::read_sample_data::read_sample_vat_data;
 use r2d2::PooledConnection;

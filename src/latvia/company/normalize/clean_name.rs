@@ -28,7 +28,7 @@ pub fn clean_company_name(input_name: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::latvia::company::clean_name::clean_company_name;
+    use crate::latvia::company::normalize::clean_name::clean_company_name;
     use actix_web::test;
 
     #[test]

@@ -7,7 +7,7 @@ pub fn parse_address(address: &String) -> (String, String) {
 
 #[cfg(test)]
 mod tests {
-    use crate::latvia::company::parse_address::parse_address;
+    use crate::latvia::company::normalize::parse_address::parse_address;
 
     #[test]
     fn address_parsing() {

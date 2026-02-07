@@ -1,7 +1,7 @@
-use crate::latvia::company::clean_name::clean_company_name;
 use crate::latvia::company::company::Company;
 use crate::latvia::company::log::log::log_search;
-use crate::latvia::company::normalize::normalize_string;
+use crate::latvia::company::normalize::clean_name::clean_company_name;
+use crate::latvia::company::normalize::normalize::normalize_string;
 use crate::latvia::company::search_map_results::search_map_results;
 use rusqlite::{Connection, Result, params};
 use std::error::Error;

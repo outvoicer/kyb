@@ -1,5 +1,5 @@
 use crate::latvia::company::company::Company;
-use crate::latvia::company::normalize::normalize_string;
+use crate::latvia::company::normalize::normalize::normalize_string;
 use crate::latvia::government::parse_address::parse_gov_address;
 use crate::latvia::government::public_institution::PublicInstitution;
 use crate::latvia::vat::vat_status::vat_status;
