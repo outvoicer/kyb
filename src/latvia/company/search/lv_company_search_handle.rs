@@ -16,7 +16,8 @@ pub async fn lv_company_search_handle(
     match Company::search_by_name(db, &query.name).await {
         Ok(results) => return Ok(results),
         Err(err) => {
-            log_search(&db, &query.name, &"".to_string(), &vec![], err.to_string()).await;
+            //
+            // log_search(&db, &query.name, &"".to_string(), &vec![], err.to_string()).await;
             eprintln!("{}", err);
             let empty = vec![];
             return Ok(empty);

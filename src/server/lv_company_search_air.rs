@@ -32,27 +32,49 @@ pub async fn lv_company_search_air(
 mod tests {
     use crate::config::KybConfig;
     use crate::latvia::company::air::air_traffic::AirSearchResponse;
+    use actix_web::Error;
     use futures_util::SinkExt;
     use futures_util::stream::StreamExt;
     use tokio_tungstenite::connect_async;
     use tokio_tungstenite::tungstenite::Utf8Bytes;
     use tokio_tungstenite::tungstenite::protocol::Message;
+
+    async fn perform_air_search(name: &str) -> Result<AirSearchResponse, Error> {
+        let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
+        let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
+        let json_string = format!("{{\"name\": \"{}\"}}", name);
+        let bytes = Utf8Bytes::from(json_string.clone());
+        let msg = Message::Text(bytes);
+        ws_stream.send(msg).await.expect("Unable to send message");
+
+        if let Some(Ok(response)) = ws_stream.next().await {
+            let payload: AirSearchResponse = serde_json::from_str(&response.to_string())?;
+            Ok(payload)
+        } else {
+            panic!("No response received");
+        }
+    }
+
     // NB - THIS REQUIRES SERVER RINNING
     #[actix_rt::test]
-    async fn test_lv_company_search_air() {
+    async fn test_lv_company_search_air_single() {
         let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
-        // Connect to the WebSocket server
         let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
-        let json_string = "{\"name\": \"raimond fantastic\"}";
-        let a = Utf8Bytes::from_static(json_string);
-        let msg = Message::Text(a);
-        ws_stream.send(msg).await.expect("Unable to send message");
-        // Optionally, read a response
-        if let Some(Ok(response)) = ws_stream.next().await {
-            let payload: AirSearchResponse = serde_json::from_str(&response.to_string()).unwrap();
+
+        let payload = perform_air_search("raimond fantastic").await.unwrap();
+        let container = payload.result.unwrap();
+        let reg_code = container[0].clone().reg_code;
+        assert_eq!(reg_code, "40203572370".to_string(), "Wrong search result.");
+    }
+
+    // NB - THIS REQUIRES SERVER RINNING
+    #[actix_rt::test]
+    async fn test_lv_company_search_air_multiple() {
+        for _ in 0..100 {
+            let payload = perform_air_search("raimond fantastic").await.unwrap();
             let container = payload.result.unwrap();
             let reg_code = container[0].clone().reg_code;
-            assert_eq!(reg_code, "40203572370".to_string(), "Wrong seartch result.");
+            assert_eq!(reg_code, "40203572370".to_string(), "Wrong search result.");
         }
     }
 }
