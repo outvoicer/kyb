@@ -12,6 +12,8 @@ Also enables validation, weather someone is currently member of board of a compa
 + lists precice match first
 + finds name, reg code, vat number, city, address, zip
 + results limited to 10 results
++ Removes SIA, AS etc from beginning and end of query.
++ Removes ' and " from query.
 - problem: does not have data on filials
 - problem: also no data on self-employed persons (this is in separate db in VID)
 
@@ -25,8 +27,13 @@ Also enables validation, weather someone is currently member of board of a compa
 - Logs verification results and errors.
 - Logs searches and results
 
-# Mac and Linux executables
-+ are abailable /release/ folder
+# Mac, Win and Linux executables
+Available /release/ folder
+
+Fair warning - the releases are not notarized, so your computer will suggest you several times not to install it.  
+So do I - I suggest to build it yourself :).  
+
+In Mac, (if you have "allow only notarized software" turned on), then after tryign to run the executable you may need to go to Settings -> Privacy / Security and click "Open anyway".
 
 # Install DB
 ```
