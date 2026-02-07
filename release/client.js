@@ -27,7 +27,7 @@ const air = (function () {
 
     // Log errors
     socket.addEventListener("error", function (event) {
-      console.error("WebSocket error: ", event);
+      console.error("Air error: ", event);
       attemptReconnect();
     });
 
@@ -37,10 +37,15 @@ const air = (function () {
   function attemptReconnect() {
     if (retryCount < maxRetries) {
       retryCount++;
-      console.log(`Attempting to reconnect... (${retryCount}/${maxRetries})`);
-      setTimeout(connect, 4000); // Wait 2 seconds before retrying
+      console.log(
+        `Air Attempting to reconnect... (${retryCount}/${maxRetries})`,
+      );
+      setTimeout(() => {
+        socket = connect(); // Reconnect and update the socket
+        printMessage(socket); // Reattach the message listener
+      }, 4000); // Wait 4 seconds before retrying
     } else {
-      console.log("Max reconnection attempts reached. Giving up.");
+      console.log("Air Max reconnection attempts reached. Giving up.");
     }
   }
 
@@ -72,7 +77,7 @@ const air = (function () {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ name: searchTerm }));
     } else {
-      console.error("Socket is not open. Cannot send search request.");
+      console.error("Air: Socket is not open. Cannot send search request.");
     }
   }
 
