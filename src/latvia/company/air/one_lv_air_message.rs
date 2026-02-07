@@ -54,7 +54,7 @@ pub async fn one_lv_air_message(
                     error: Some("Failed to deserialize message".to_string()),
                     result: None,
                 };
-                let _ = send_message(&mut session, respo).await;
+                send_message(&mut session, respo).await?;
             }
 
             Ok(())
