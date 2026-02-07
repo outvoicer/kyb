@@ -1,17 +1,23 @@
-Business tools for Latvian KYB procedures.
+# Propably the fastest Latvian business registry search.  
+  
+Has socket based search available - so it does not need to reconnect on each letter.
+
+Also enables validation, weather someone is currently member of board of a company.
+
+# Search Latvian company or government institution
++ REST API and websocket support.
++ Search with company name.
++ searches with or without Latvian special characters.
++ case independent.
++ lists precice match first
++ finds name, reg code, vat number, city, address, zip
++ results limited to 10 results
+- problem: does not have data on filials
+- problem: also no data on self-employed persons (this is in separate db in VID)
 
 # Validate Latvian member of board
 - Send person name, personal id and company registration code.
 - Receive confirmation if this person is a member of board.
-
-# Search Latvian company or government institution
-- REST API and websocket support.
-- Search with company name.
-- searches with or without Latvian special characters.
-- case independent.
-- lists precice match first
-- finds name, reg code, vat number, city, address, zip
-- results limited to 10 results
 
 # Update and logging
 - Keeps a local ~ 60 mb db of companies, public institutions and members of board
@@ -101,6 +107,7 @@ Empty response - I have used .unwrap()
 + Every role in the CSV is considered as a positive match (Also Liqvidators and empty)
 + If CSV entry has personal code, then personal code is matched.
 + If CSV entry does not have personal code in db (like foreign owners), then personal code is not used for validation.
+- problem: does not have proxies.
 
 # Sources
 ```
