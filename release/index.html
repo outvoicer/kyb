@@ -13,44 +13,45 @@
 
         <div id="results"></div>
         <script>
-            function listener(event) {
-                const resultsDiv = document.getElementById("results");
-                // PARSE RESULT,
-                // IT CAN BE SEARCH RESULT, PONG OR ERROR MESSAGE
-                let message = air.listen(event);
-                // RESULT IS AN ARRAY
-                if (message && message.result && message.result[0]) {
-                    // PRINT RESULTS TO DIV
-                    resultsDiv.innerHTML = "";
-                    for (let i = 0; i < message.result.length; i++) {
-                        resultsDiv.innerHTML += `<p>${JSON.stringify(message.result[i])}</p>`;
-                    }
-                }
-            }
-            function printMessage(socket) {
-                // REMOVE OLD
-                socket.removeEventListener("message", listener);
-                // ADD NEW
-                socket.addEventListener("message", listener);
-            }
-
             document.addEventListener("DOMContentLoaded", function () {
                 // GET ELEMENTS
                 const searchInput = document.getElementById("searchInput");
                 // START SOCKET
                 let socket = air.start();
+                // LISTEN TO document.airMessage FOR SUCCESFUL SEARCH RESULTS
+                document.addEventListener("airMessage", function (event) {
+                    // JUST FOR THIS FRONTEND HERE - MAKE SURE THERE'S OVER 0 LINES
+                    if (
+                        event.detail &&
+                        event.detail.result &&
+                        event.detail.result.length &&
+                        event.detail.result.length > 0
+                    ) {
+                        // FIND PLACE TO PRINT
+                        const resultsDiv = document.getElementById("results");
+                        // RESTART "CANVAS"
+                        resultsDiv.innerHTML = "";
+                        // WRITE
+                        for (let i = 0; i < event.detail.result.length; i++) {
+                            resultsDiv.innerHTML += `<p>${JSON.stringify(event.detail.result[i])}</p>`;
+                        }
+                    }
+                });
+                // "HANDLE" ERRORS
+                document.addEventListener("airError", function (event) {
+                    console.error("Air error received:", event.detail);
+                });
+                // WAIT FOR SOCKET TO OPEN
                 socket.addEventListener("open", function (event) {
-                    // LISTEN TO MESSAGES IN SOCKET AND PRINT THEM
-                    printMessage(socket);
-                    // SEARCH ON KEYPRESS
+                    // WAIT FOR KEYPRESS
                     searchInput.addEventListener("input", function () {
+                        // TRIM INPUT
                         const searchTerm = searchInput.value.trim();
+                        // PERFORM SEARCH
                         air.search(searchTerm, function (err, result) {
                             if (err) {
                                 // RESTART ON ERROR
                                 socket = air.start();
-                                // NEW LISTENER FOR NEW SOCKET
-                                printMessage(socket);
                             }
                         });
                     });

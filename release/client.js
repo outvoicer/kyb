@@ -1,16 +1,52 @@
+/*
+
+Frontend client to perform Latvian company search by name over socket.
+
++ Connect to kyb server socket,
++ send messages
++ listen to messages (search results + errors)
++ dispatch to front end
+
+// MOST SIMPLE USAGE:
+// CREATE SOCKET
+let socket = air.start();
+// LISTEN TO document.airMessage FOR SEARCH RESULTS
+document.addEventListener("airMessage", function (event) {
+  console.log(event.detail.result[0]);
+});
+// WAIT FOR SOCKET OPEN
+socket.addEventListener("open", function () {
+  // AND SEND MESSAGE
+  socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
+});
+*/
+/*
+// OLD WAY OF CONNECTING:
+// LISTEN TO MESSAGES
+socket.addEventListener("message", function (event) {
+  let result = air.listen(event);
+  if (result && result.result && result.result[0]) {
+    console.log(result.result[0]);
+  }
+});
+// SEND TEST MESSAGE
+socket.addEventListener("open", function () {
+  socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
+});
+ */
+
 const air = (function () {
   // OUR HERO OF THE DAY - SOCKET
   let socket;
-  const maxRetries = 3;
+  // SET UP RETRIES
+  const maxRetries = 5;
   let retryCount = 0;
-
+  // CONNECT TO SERVER
   function connect() {
     socket = new WebSocket("ws://localhost:10001/lv/air");
-
     socket.addEventListener("open", function (event) {
       console.log("Connected to air search");
       retryCount = 0; // Reset retry count on successful connection
-
       // Start sending ping messages every 25 seconds
       setInterval(() => {
         if (socket.readyState === WebSocket.OPEN) {
@@ -18,22 +54,46 @@ const air = (function () {
         }
       }, 25000);
     });
-
-    // Handle connection close
+    // HANDLE CLOSE CONNECTION EVENT
     socket.addEventListener("close", function (event) {
-      console.log("Disconnected from air search");
+      console.error("Air search: Disconnected from server");
       attemptReconnect();
     });
-
-    // Log errors
+    // LOG ERRORS
     socket.addEventListener("error", function (event) {
-      console.error("Air error: ", event);
+      console.error("Air search error: ", event);
       attemptReconnect();
     });
+    // HANDLE MESSAGES
+    socket.addEventListener("message", function (event) {
+      // LISTEN TO MESSAGE, PARSE AND DISPACTH TO INDEX.HTML
+      try {
+        // ATTEMPT TO PARSE
+        let data = JSON.parse(event.data);
 
+        if (data.error) {
+          const messageEvent = new CustomEvent("airError", {
+            detail: data.error,
+          });
+          // DSICPATCH TO FRONT END
+          document.dispatchEvent(messageEvent);
+        } else {
+          const messageEvent = new CustomEvent("airMessage", {
+            detail: data,
+          });
+          // DSICPATCH TO FRONT END
+          document.dispatchEvent(messageEvent);
+        }
+      } catch (err) {
+        // LOG ERRORS
+        console.error(err);
+      }
+    });
+    // RETURN SOCKET TO FRONT END
     return socket;
   }
 
+  // ATTEMT RECONNECT
   function attemptReconnect() {
     if (retryCount < maxRetries) {
       retryCount++;
@@ -42,17 +102,18 @@ const air = (function () {
       );
       setTimeout(() => {
         socket = connect(); // Reconnect and update the socket
-        printMessage(socket); // Reattach the message listener
       }, 4000); // Wait 4 seconds before retrying
     } else {
       console.log("Air Max reconnection attempts reached. Giving up.");
     }
   }
 
+  // START IS CONNECT
   function start(event) {
     return connect();
   }
 
+  // LISTEN TO SINGLE EVENT
   function listen(event) {
     try {
       let data = JSON.parse(event.data);
@@ -87,18 +148,3 @@ const air = (function () {
     search,
   };
 })();
-/*
-// USE IT:
-let socket = air.start();
-// LISTEN TO MESSAGES
-socket.addEventListener("message", function (event) {
-  let result = air.listen(event);
-  if (result && result.result && result.result[0]) {
-    console.log(result.result[0]);
-  }
-});
-// SEND TEST MESSAGE
-socket.addEventListener("open", function () {
-  socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
-});
- */
