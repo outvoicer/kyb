@@ -1,4 +1,4 @@
-pub mod air_traffic;
+pub mod air;
 pub mod clean_name;
 pub mod company;
 pub mod create_company_table;
@@ -9,7 +9,6 @@ pub mod input_company;
 pub mod log;
 pub mod lv_company_search_handle;
 pub mod normalize;
-pub mod one_lv_air_message;
 pub mod parse_address;
 pub mod search;
 pub mod search_map_results;

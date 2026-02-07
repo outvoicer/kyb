@@ -1,9 +1,9 @@
 use crate::db::get_db::Pool;
 use crate::error::KybError;
-use crate::latvia::company::air_traffic::AirSearchResponse;
-use crate::latvia::company::air_traffic::Ping;
-use crate::latvia::company::air_traffic::Pong;
-use crate::latvia::company::air_traffic::send_message;
+use crate::latvia::company::air::air_traffic::AirSearchResponse;
+use crate::latvia::company::air::air_traffic::Ping;
+use crate::latvia::company::air::air_traffic::Pong;
+use crate::latvia::company::air::air_traffic::send_message;
 use crate::latvia::company::lv_company_search_handle::CompanySearchQuery;
 use crate::latvia::company::lv_company_search_handle::lv_company_search_handle;
 use actix_web::web;
