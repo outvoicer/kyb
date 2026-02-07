@@ -20,20 +20,6 @@ socket.addEventListener("open", function () {
   socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
 });
 */
-/*
-// OLD WAY OF CONNECTING:
-// LISTEN TO MESSAGES
-socket.addEventListener("message", function (event) {
-  let result = air.listen(event);
-  if (result && result.result && result.result[0]) {
-    console.log(result.result[0]);
-  }
-});
-// SEND TEST MESSAGE
-socket.addEventListener("open", function () {
-  socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
-});
- */
 /// Client to kyb server
 const air = (function () {
   // OUR HERO OF THE DAY - SOCKET
