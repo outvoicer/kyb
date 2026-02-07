@@ -35,13 +35,15 @@ mod tests {
     use actix_web::Error;
     use futures_util::SinkExt;
     use futures_util::stream::StreamExt;
-    use tokio_tungstenite::connect_async;
+    use tokio::net::TcpStream;
     use tokio_tungstenite::tungstenite::Utf8Bytes;
     use tokio_tungstenite::tungstenite::protocol::Message;
+    use tokio_tungstenite::{MaybeTlsStream, WebSocketStream, connect_async};
 
-    async fn perform_air_search(name: &str) -> Result<AirSearchResponse, Error> {
-        let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
-        let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
+    async fn perform_air_search(
+        ws_stream: &mut WebSocketStream<MaybeTlsStream<TcpStream>>,
+        name: &str,
+    ) -> Result<AirSearchResponse, Error> {
         let json_string = format!("{{\"name\": \"{}\"}}", name);
         let bytes = Utf8Bytes::from(json_string.clone());
         let msg = Message::Text(bytes);
@@ -55,23 +57,45 @@ mod tests {
         }
     }
 
-    // NB - THIS REQUIRES SERVER RINNING
+    // NB - THIS REQUIRES SERVER RUNNING
     #[actix_rt::test]
     async fn test_lv_company_search_air_single() {
         let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
         let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
 
-        let payload = perform_air_search("raimond fantastic").await.unwrap();
+        let payload = perform_air_search(&mut ws_stream, "raimond fantastic")
+            .await
+            .unwrap();
         let container = payload.result.unwrap();
         let reg_code = container[0].clone().reg_code;
         assert_eq!(reg_code, "40203572370".to_string(), "Wrong search result.");
     }
 
-    // NB - THIS REQUIRES SERVER RINNING
+    // NB - THIS REQUIRES SERVER RUNNING
     #[actix_rt::test]
-    async fn test_lv_company_search_air_multiple() {
+    async fn test_lv_company_search_air_100_clients() {
         for _ in 0..100 {
-            let payload = perform_air_search("raimond fantastic").await.unwrap();
+            let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
+            let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
+
+            let payload = perform_air_search(&mut ws_stream, "raimond fantastic")
+                .await
+                .unwrap();
+            let container = payload.result.unwrap();
+            let reg_code = container[0].clone().reg_code;
+            assert_eq!(reg_code, "40203572370".to_string(), "Wrong search result.");
+        }
+    }
+    // NB - THIS REQUIRES SERVER RUNNING
+    #[actix_rt::test]
+    async fn test_lv_company_search_air_1000_requests() {
+        let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
+        let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
+
+        for _ in 0..1000 {
+            let payload = perform_air_search(&mut ws_stream, "raimond fantastic")
+                .await
+                .unwrap();
             let container = payload.result.unwrap();
             let reg_code = container[0].clone().reg_code;
             assert_eq!(reg_code, "40203572370".to_string(), "Wrong search result.");
