@@ -1,5 +1,6 @@
 function startAir(event) {
-  let socket = new WebSocket("ws://localhost:10001/lv/air");
+  //  let socket = new WebSocket("ws://localhost:10001/lv/air");
+  let socket = new WebSocket("wss://kyb.outvoicer.com/lv/air");
   socket.addEventListener("open", function (event) {
     console.log("Connected to air search");
     // Start sending ping messages every 25 seconds
@@ -42,7 +43,7 @@ function listenToAir(event) {
     return false;
   }
 }
-
+/*
 // USE IT:
 let socket = startAir();
 // LISTEN TO MESSAGES
@@ -56,3 +57,4 @@ socket.addEventListener("message", function (event) {
 socket.addEventListener("open", function () {
   socket.send(JSON.stringify({ name: "Raimond Fantastic" }));
 });
+ */
