@@ -9,6 +9,7 @@ impl Company {
     pub async fn search_by_name(
         conn: &Connection,
         name: &String,
+        test: bool,
     ) -> Result<Vec<Company>, Box<dyn Error>> {
         let mut stmt = conn.prepare(
             "SELECT legal_form, name, city, address, zip, public_sector, reg_code, vat, vat_number
@@ -28,7 +29,9 @@ impl Company {
         let normalized_name = normalize_string(&clean_name.to_string());
         if normalized_name == "".to_string() {
             // IF NOTHING LEFT, RETURN EMPTY
-            log_search(conn, name, &normalized_name, &vec![], "".to_string()).await;
+            if test == false {
+                log_search(conn, name, &normalized_name, &vec![], "".to_string()).await;
+            }
             return Ok(vec![]);
         }
         // QUERY
@@ -36,14 +39,16 @@ impl Company {
         // MAP RESUTS
         let search_results = search_map_results(rows).await?;
         // LOG RESULTS
-        log_search(
-            conn,
-            name,
-            &normalized_name,
-            &search_results,
-            "".to_string(), // tbd vat result
-        )
-        .await;
+        if test == false {
+            log_search(
+                conn,
+                name,
+                &normalized_name,
+                &search_results,
+                "".to_string(), // tbd vat result
+            )
+            .await;
+        }
         // RETURN
         Ok(search_results)
     }

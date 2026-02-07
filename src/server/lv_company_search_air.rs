@@ -72,8 +72,8 @@ mod tests {
     }
 
     // NB - THIS REQUIRES SERVER RUNNING
-    #[actix_rt::test]
-    async fn test_lv_company_search_air_100_clients() {
+    // #[actix_rt::test]
+    async fn _test_lv_company_search_air_100_clients() {
         for _ in 0..100 {
             let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
             let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
@@ -87,8 +87,8 @@ mod tests {
         }
     }
     // NB - THIS REQUIRES SERVER RUNNING
-    #[actix_rt::test]
-    async fn test_lv_company_search_air_1000_requests() {
+    // #[actix_rt::test]
+    async fn _test_lv_company_search_air_1000_requests() {
         let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
         let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
 

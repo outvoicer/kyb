@@ -13,7 +13,7 @@ pub async fn lv_company_search_handle(
     db: &Connection,
     query: CompanySearchQuery,
 ) -> Result<Vec<Company>, KybError> {
-    match Company::search_by_name(db, &query.name).await {
+    match Company::search_by_name(db, &query.name, false).await {
         Ok(results) => return Ok(results),
         Err(err) => {
             log_search(&db, &query.name, &"".to_string(), &vec![], err.to_string()).await;
