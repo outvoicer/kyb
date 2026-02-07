@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Air search test</title>
+        <script src="client.js"></script>
+    </head>
+    <body>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Latvian company"
+        />
+
+        <div id="results"></div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // GET ELEMENTS
+                const searchInput = document.getElementById("searchInput");
+                const resultsDiv = document.getElementById("results");
+
+                // GET SOCKET
+                let socket = startAir();
+
+                // LISTEN TO MESSAGES IN SOCKET
+                socket.addEventListener("message", function (event) {
+                    let result = listenToAir(event);
+                    if (result && result.result && result.result[0]) {
+                        // PRINT RESULTS TO DIV
+                        resultsDiv.innerHTML = "";
+                        for (let i = 0; i < result.result.length; i++) {
+                            resultsDiv.innerHTML += `<p>${JSON.stringify(result.result[i])}</p>`;
+                        }
+                    }
+                });
+
+                // SEARCH ON KEYPRESS
+                searchInput.addEventListener("input", function () {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm && socket.readyState === WebSocket.OPEN) {
+                        // IF SOCKET IS THERE, SEND SEARCH QUERY
+                        socket.send(JSON.stringify({ name: searchTerm }));
+                    } else {
+                        // SOCKET IS CLOSED
+                        console.error(
+                            "Cannot send to socket, connection is closed",
+                        );
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

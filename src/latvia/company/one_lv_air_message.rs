@@ -11,6 +11,16 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use serde::{Deserialize, Serialize};
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Ping {
+    pub ping: bool,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Pong {
+    pub pong: bool,
+}
+
 pub async fn one_lv_air_message(
     pool: web::Data<Pool>,
     mut session: &mut Session,
@@ -24,6 +34,34 @@ pub async fn one_lv_air_message(
         Ok(AggregatedMessage::Text(bytes)) => {
             // HANDLE ONE MESSAGE
             // SERIALIZE
+            let as_v8 = bytes.as_bytes();
+            let search = serde_json::from_slice::<CompanySearchQuery>(&as_v8);
+            let ping = serde_json::from_slice::<Ping>(&as_v8);
+            if search.is_ok() {
+                let query = search.unwrap();
+                let result = lv_company_search_handle(&conn, query).await?;
+                // STRINGIFY:
+                let respo = AirSearchResponse {
+                    result: Some(result),
+                    error: None,
+                };
+                // SEND
+                send_message(&mut session, respo).await?;
+                // Ok(())
+            } else if ping.is_ok() {
+                let pong = Pong { pong: true };
+                let payload = serde_json::to_string(&pong)?;
+                if let Err(e) = &session.text(payload).await {
+                    return Err(KybError::StringError(e.to_string()));
+                }
+            } else {
+                let respo = AirSearchResponse {
+                    error: Some("Failed to deserialize message".to_string()),
+                    result: None,
+                };
+                let _ = send_message(&mut session, respo).await;
+            }
+            /*
             match serde_json::from_slice::<CompanySearchQuery>(&bytes.as_bytes()) {
                 Ok(query) => {
                     // SEARCH
@@ -46,11 +84,7 @@ pub async fn one_lv_air_message(
                     Ok(())
                 }
             }
-        }
-
-        Ok(AggregatedMessage::Ping(msg)) => {
-            // respond to PING frame with PONG frame
-            session.pong(&msg).await.unwrap();
+             */
             Ok(())
         }
 
