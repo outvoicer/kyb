@@ -16,6 +16,7 @@ Also enables validation, weather someone is currently member of board of a compa
 + Removes ' and " from query.
 - problem: does not have data on filials
 - problem: also no data on self-employed persons (this is in separate db in VID)
+- problem: is missing embassy-s.
 
 # Validate Latvian member of board
 - Send person name, personal id and company registration code.
