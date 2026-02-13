@@ -8,6 +8,6 @@ pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub fn get_db() -> Result<Pool, KybError> {
     let file = db_file()?;
     let manager = SqliteConnectionManager::file(file);
-    let pool = Pool::new(manager).unwrap();
+    let pool = Pool::builder().max_size(15).build(manager).unwrap();
     Ok(pool)
 }
