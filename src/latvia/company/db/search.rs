@@ -36,7 +36,7 @@ impl Company {
         }
         // QUERY
         let rows = stmt.query(params![normalized_name])?;
-        // MAP RESUTS
+        // MAP RESUTS IF THIS IS NOT TEST
         let search_results = search_map_results(rows).await?;
         // LOG RESULTS
         if test == false {
