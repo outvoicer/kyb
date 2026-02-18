@@ -195,5 +195,9 @@ Pull new code, build new executable and restart nginx service (requires password
 ./rebuild.sh
 ```
 
-# Licensing
-All rights reserved. If you need a license, please contact martin@outvoicer.com
+# License
+
+Licensed under either of
+* Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+* MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+at your option.
