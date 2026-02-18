@@ -29,17 +29,15 @@ impl Company {
         let normalized_name = normalize_string(&clean_name.to_string());
         if normalized_name == "".to_string() {
             // IF NOTHING LEFT, RETURN EMPTY
-            if test == false {
-                log_search(conn, name, &normalized_name, &vec![], "".to_string()).await;
-            }
             return Ok(vec![]);
         }
         // QUERY
         let rows = stmt.query(params![normalized_name])?;
         // MAP RESUTS IF THIS IS NOT TEST
         let search_results = search_map_results(rows).await?;
-        // LOG RESULTS
+        // IF IT'S NOT A TEST
         if test == false {
+            // LOG RESULTS
             log_search(
                 conn,
                 name,

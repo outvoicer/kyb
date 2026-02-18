@@ -11,7 +11,10 @@ pub async fn api_test(pool: web::Data<Pool>) -> impl Responder {
         }
     };
 
-    match Company::search_by_name(&db, &"Raimond Fantastic".to_string(), true).await {
+    let result = Company::search_by_name(&db, &"Raimond Fantastic".to_string(), true).await;
+    drop(db);
+
+    match result {
         Ok(results) => {
             if let Some(first_result) = results.get(0) {
                 if first_result.reg_code == "40203572370" {

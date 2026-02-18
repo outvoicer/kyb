@@ -8,7 +8,10 @@ pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub fn get_db() -> Result<Pool, KybError> {
     let file = db_file()?;
     let manager = SqliteConnectionManager::file(file);
-    let pool = Pool::builder().max_size(15).build(manager);
+    let pool = Pool::builder()
+        .max_size(15)
+        .connection_timeout(std::time::Duration::from_secs(10))
+        .build(manager);
     match pool {
         Ok(pool) => return Ok(pool),
         Err(err) => {
