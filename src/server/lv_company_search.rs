@@ -16,33 +16,37 @@ pub async fn lv_company_search(
     let company_query: CompanySearchQuery = query.into_inner();
     match lv_company_search_handle(&conn, company_query).await {
         Ok(results) => {
+            // drop(pool);
             return HttpResponse::Ok().json(results);
         }
-        Err(err) => match err {
-            KybError::StringError(err) => {
-                eprintln!("kyb err: {:?}", &err);
-                HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err }))
+        Err(err) => {
+            //  drop(pool);
+            match err {
+                KybError::StringError(err) => {
+                    eprintln!("kyb err: {:?}", &err);
+                    HttpResponse::ExpectationFailed().json(serde_json::json!({ "error": err }))
+                }
+                _ => {
+                    eprintln!("server down: {:?}", &err);
+                    HttpResponse::InternalServerError()
+                        .json(serde_json::json!({ "error": "Server down" }))
+                }
             }
-            _ => {
-                eprintln!("server down: {:?}", &err);
-                HttpResponse::InternalServerError()
-                    .json(serde_json::json!({ "error": "Server down" }))
-            }
-        },
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tasks::create_test_db::create_test_db;
+    use crate::{latvia::company::company::Company, tasks::create_test_db::create_test_db};
     use actix_web::{App, test, web};
+    use reqwest::Client;
     use serde_json::json;
     use std::time::{Duration, Instant};
 
     // THIS ASSUMES DB IS INSTALLED
     #[actix_rt::test]
-
     async fn test_lv_company_search_success() {
         // Create DB
         let db = create_test_db().await.unwrap();
@@ -112,5 +116,28 @@ mod tests {
         let response_body: serde_json::Value = test::read_body_json(resp).await;
         // ASSERT IT'S EMPTY
         assert_eq!(response_body, json!([]));
+    }
+    // THIS ASSUMES SERVER IS RUNNING
+    #[test]
+    async fn integration_lv_company_search_100_times() {
+        let client = Client::new();
+        let url = "http://localhost:10001/lv/company";
+        let payload = json!({ "name": "Raimond fantastic" });
+        for _ in 0..100 {
+            let response = client
+                .post(url)
+                .header("Content-Type", "application/json")
+                .body(payload.to_string())
+                .send()
+                .await
+                .expect("Failed to send request");
+
+            assert!(response.status().is_success(), "Request failed");
+
+            let response_body = response.text().await.expect("Failed to read response body");
+            let parsed: Vec<Company> = serde_json::from_str(&response_body).unwrap();
+
+            assert_eq!(parsed[0].reg_code, "40203572370".to_string());
+        }
     }
 }

@@ -1,16 +1,13 @@
-use crate::db::get_db::get_db;
 use crate::latvia::board::get_new_data::fetch_and_store_data;
 use crate::latvia::company::import::get_new_company_data::fetch_new_company_data;
 use crate::latvia::government::get_new_data::fetch_new_public_institution_data;
 use crate::latvia::vat::get_new_data::fetch_new_vat_data;
-use r2d2::PooledConnection;
+use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
 use std::error::Error;
 
-pub async fn import_new_data() -> Result<(), Box<dyn Error>> {
+pub async fn import_new_data(pool: Pool<SqliteConnectionManager>) -> Result<(), Box<dyn Error>> {
     // get db pool
-    let pool = get_db()?;
-    // get db
     let mut conn: PooledConnection<SqliteConnectionManager> =
         pool.get().expect("Couldn't get db connection from pool");
     // GET MEMBERS OF BOARDS
@@ -21,5 +18,6 @@ pub async fn import_new_data() -> Result<(), Box<dyn Error>> {
     fetch_new_company_data(&mut conn, &vat_table).await?;
     // GET PUBLIC INSTITUTIONS
     fetch_new_public_institution_data(&mut conn, &vat_table).await?;
+    // drop(pool);
     Ok(())
 }

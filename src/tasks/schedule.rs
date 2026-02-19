@@ -1,9 +1,11 @@
 use crate::config::KybConfig;
 use crate::tasks::import_new_data::import_new_data;
 use chrono::{Duration as ChronoDuration, Local, Timelike};
+use r2d2::Pool;
+use r2d2_sqlite::SqliteConnectionManager;
 use tokio::time::{Duration, Instant, sleep_until};
 
-pub async fn schedule_update() {
+pub async fn schedule_update(pool: Pool<SqliteConnectionManager>) {
     let hour = KybConfig::UPDATE_HOUR;
     let minute = KybConfig::UPDATE_MINUTE;
     loop {
@@ -29,6 +31,6 @@ pub async fn schedule_update() {
         )
         .await;
 
-        let _ = import_new_data().await;
+        let _ = import_new_data(pool.clone()).await;
     }
 }

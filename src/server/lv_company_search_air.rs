@@ -13,7 +13,6 @@ pub async fn lv_company_search_air(
         // aggregate continuation frames up to 10 kb
         .max_continuation_size(10 * 1024);
     let pool_clone = pool.clone();
-
     // start task but don't wait for it
     rt::spawn(async move {
         // receive messages from websocket
@@ -23,6 +22,7 @@ pub async fn lv_company_search_air(
                 println!("LV air message error: {}", e);
             }
         }
+        // drop(pool_clone);
     });
     // respond immediately with response connected to WS session
     Ok(res)
@@ -72,7 +72,7 @@ mod tests {
     }
 
     // NB - THIS REQUIRES SERVER RUNNING
-    // #[actix_rt::test]
+    #[actix_rt::test]
     async fn _test_lv_company_search_air_100_clients() {
         for _ in 0..100 {
             let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
@@ -87,7 +87,7 @@ mod tests {
         }
     }
     // NB - THIS REQUIRES SERVER RUNNING
-    // #[actix_rt::test]
+    #[actix_rt::test]
     async fn _test_lv_company_search_air_1000_requests() {
         let url = format!("ws://{}/lv/air", KybConfig::SERVER_ADDRES);
         let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");

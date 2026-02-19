@@ -9,7 +9,7 @@ pub fn get_db() -> Result<Pool, KybError> {
     let file = db_file()?;
     let manager = SqliteConnectionManager::file(file);
     let pool = Pool::builder()
-        .max_size(15)
+        .max_size(200)
         .connection_timeout(std::time::Duration::from_secs(10))
         .build(manager);
     match pool {
