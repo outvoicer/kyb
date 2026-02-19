@@ -6,15 +6,17 @@ With server in Germany and client in Latvia socket gives ~0.2 sec results on scr
 
 This 0.5 sec comes from REST starting the whole request journey from beginning but socket was connected already.
 
-Uses Rust and SQLite.
+Uses Rust and SQLite. 
+
+Downloads daily fresh data from Latvijas Republikas Uzņēmumu reģistrs Open Data portal.
 
 -- 
 
-Most common use case for this is building the company registration flow for your (Latvian serving) app.
+Most common use case for this is building the company registration flow for your (Latvian) app.
 
-There are documented cases below (this does not have filials data etc) for which the software cannot help you. 
+There are documented cases below (no data for filials etc) for which the software cannot help you. 
 
-For these cases you can use [Uzņēmumu reģistrs API](https://www.ur.gov.lv/en/get-information/free-of-charge-services/api-web-services/) or Lursoft or Firmas.lv.
+For these cases use [Uzņēmumu reģistrs API](https://www.ur.gov.lv/en/get-information/free-of-charge-services/api-web-services/) or Lursoft or Firmas.lv.
 
 # Search Latvian company or government institution
 + REST API and websocket support.
