@@ -46,12 +46,12 @@ mod tests {
     }
 
     #[test]
-    async fn integration_lv_janis_is_member_of_board_100_times() {
+    async fn integration_lv_janis_is_member_of_board_1000_times() {
         let client = Client::new();
         let url = "http://localhost:10001/lv/board";
         let payload = json!({ "name": "Bērziņš Jānis", "personal_code": "201292-*****", "reg_code": "40103235360" });
 
-        for _ in 0..100 {
+        for _ in 0..1000 {
             let response = client
                 .post(url)
                 .header("Content-Type", "application/json")

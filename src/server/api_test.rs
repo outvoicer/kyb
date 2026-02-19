@@ -46,11 +46,11 @@ mod tests {
     }
 
     #[test]
-    async fn integration_lv_janis_is_member_of_board_100_times() {
+    async fn integration_lv_janis_is_member_of_board_1000_times() {
         let client = Client::new();
         let url = "http://localhost:10001/api/test";
 
-        for _ in 0..100 {
+        for _ in 0..1000 {
             let response = client
                 .get(url)
                 .header("Content-Type", "application/json")

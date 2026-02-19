@@ -34,7 +34,6 @@ pub async fn one_lv_air_message(
                 let query = search.unwrap();
                 // SEARCH
                 let result = lv_company_search_handle(&conn, query).await?;
-                println!("result {:?}", result);
                 //drop(conn);
                 // STRINGIFY:
                 let respo = AirSearchResponse {

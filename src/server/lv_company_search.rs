@@ -119,11 +119,11 @@ mod tests {
     }
     // THIS ASSUMES SERVER IS RUNNING
     #[test]
-    async fn integration_lv_company_search_100_times() {
+    async fn integration_lv_company_search_1000_times() {
         let client = Client::new();
         let url = "http://localhost:10001/lv/company";
         let payload = json!({ "name": "Raimond fantastic" });
-        for _ in 0..100 {
+        for _ in 0..1000 {
             let response = client
                 .post(url)
                 .header("Content-Type", "application/json")
