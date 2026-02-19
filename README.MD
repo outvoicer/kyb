@@ -9,7 +9,7 @@ Also enables validation, weather someone is currently member of board of a compa
 + Search with company name.
 + searches with or without Latvian special characters.
 + case independent.
-+ lists precice match first
++ lists precise match first
 + finds name, reg code, vat number, city, address, zip
 + results limited to 10 results
 + Removes SIA, AS etc from beginning and end of query.
@@ -32,15 +32,15 @@ Also enables validation, weather someone is currently member of board of a compa
 Available /release/ folder
 
 Fair warning - the releases are not notarized, so your computer will suggest you several times not to install it.  
-So do I - I suggest to build it yourself :).  
 
 In Mac, (if you have "allow only notarized software" turned on), then after tryign to run the executable you may need to go to Settings -> Privacy / Security and click "Open anyway".
 
-# Install DB
+# Download latest DB
+This will download the latest data from company register Open Data portal.
 ```
-cargo run install
-or
 ./kyb install
+// or
+cargo run install
 ```
 
 # Run
@@ -48,13 +48,24 @@ or
 cargo run
 Runs by default at 127.0.0.1:10001
 ```
+The index.html + client.js in releases file should be able to connect to the server.
 
 # REST API company search:
 ```
 curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond fantastic "}'
 
 Response:
-[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 123","zip":"LV-1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}]
+[{
+  "legal_form":"SIA",
+  "name":"Raimond fantastic",
+  "city":"Jūrmala",
+  "address":"Fantastics prospekts 123",
+  "zip":"LV-1234",
+  "public_sector":"0",
+  "reg_code":"40203572370",
+  "vat":true,
+  "vat_number":"LV40203572370"
+}]
 
 Search "", get []
 
@@ -69,8 +80,21 @@ ws ws://127.0.0.1:10001/lv/air
 {"name": "Raimond fantastic"}
 
 Response:
-{"result":[{"legal_form":"SIA","name":"Raimond fantastic","city":"Jūrmala","address":"Fantastics prospekts 1","zip":"LV-1234","public_sector":"0","reg_code":"40203572370","vat":true,"vat_number":"LV40203572370"}],"error":null}
-
+{
+  "result":[{
+    "legal_form":"SIA",
+    "name":"Raimond fantastic",
+    "city":"Jūrmala",
+    "address":"Fantastics prospekts 1",
+    "zip":"LV-1234",
+    "public_sector":"0",
+    "reg_code":"40203572370",
+    "vat":true,
+    "vat_number":"LV40203572370"
+  }],
+  "error":null
+  }
+  
 or
 {"name": "asdfadsf"}
 {"result":[],"error":null}
@@ -86,7 +110,9 @@ asdf
 
 # Considerations - Company search and VAT
 + Assumes reg code (40203572370) and VAT Number (LV40203572370) number part match.
-+ Because of this, the system currently gives false negatives (does not indicate VAT when it should) in cases when company reg code and VAT number do not match. This is the case usually with bigger corporations and governmental institutions. This could be fixed on request - it is this way as it does not disturb our own main use cases too much yet - we use it for company registration and buyer registration. One obvious place where it would be needed is the case of international invoices - there the 0% export VAT is not applied when VAT number is not indicated. We pledge to fix it on first customer request.
++ Because of this, the system currently gives false negatives (does not indicate VAT when it should) in cases when company reg code and VAT number do not match. 
++ This is the case usually with bigger corporations and governmental institutions. 
++ We pledge to fix it on first request.
 + The reason why it is this way, is because the open data VAT registry has "VAT Number" and "Name" fields, but no "Registration code" field, so matching it with the name may require a bit of extra engineering, as there is the freedom to either write SIA in front or after your business name and some other quirks.
 + There are companies with a registration code 000703116, so we use string for reg code field.
 
@@ -108,7 +134,7 @@ Empty response - I have used .unwrap()
 ```
 
 # Considerations for Members of board validation:
-+ Only first part of personal_code is matched, therefore we have "201292-*****" in sample. Second part comes anonymised from source.
++ Only first part of personal_code is matched, therefore we have "201292-*****" in sample. Second part comes anonymised from Latvian Open Data portal.
 + Person name order is lastname + firstname.
 + Person name has to be exact match (Bērziņš Jānis, not Berzins Janis)
 + Reg code has to be exact match and 11 characters (cannot have LV in beginning).
@@ -158,6 +184,8 @@ cargo watch -x "test test_two_janises -- --nocapture"
 ```
 
 # DB
+Uses Sqlite for db.
+Uses rust dirs crate to generalt platform spcecic path
 ```
 sqlite3 /home/www/.local/share/kyb/kyb.db
 sqlite3 /Users/martin/Library/Application\ Support/kyb/kyb.db
@@ -187,6 +215,8 @@ sudo systemctl start kyb
 Logs:
 ```
 journalctl -u kyb.service
+journalctl -u kyb.service -f
+
 ```
 # Update and rebuild
 Pull new code, build new executable and restart nginx service (requires password for sudo)
