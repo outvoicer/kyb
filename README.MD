@@ -1,8 +1,20 @@
 # Propably the fastest Latvian business registry search.  
   
-Has socket based search available - so it does not need to reconnect on each letter.
+Socket based search avoids making a new request for each letter.
 
-Also enables validation, weather someone is currently member of board of a company.
+With server in Germany and client in Latvia socket gives ~0.2 sec results on screen vs ~0.7 sec with REST.
+
+This 0.5 sec comes from REST starting the whole request journey from beginning but socket was connected already.
+
+Uses Rust and SQLite.
+
+-- 
+
+Most common use case for this is building the company registration flow for your (Latvian serving) app.
+
+There are documented cases below (this does not have filials data etc) for which the software cannot help you. 
+
+For these cases you can use [Uzņēmumu reģistrs API](https://www.ur.gov.lv/en/get-information/free-of-charge-services/api-web-services/) or Lursoft or Firmas.lv.
 
 # Search Latvian company or government institution
 + REST API and websocket support.
