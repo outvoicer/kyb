@@ -42,28 +42,6 @@ For these cases use [Uzņēmumu reģistrs API](https://www.ur.gov.lv/en/get-info
 - Logs verification results and errors.
 - Logs searches and results
 
-# Mac, Win and Linux executables
-Available /release/ folder
-
-Fair warning - the releases are not notarized, so your computer will suggest you several times not to install it.  
-
-In Mac, (if you have "allow only notarized software" turned on), then after tryign to run the executable you may need to go to Settings -> Privacy / Security and click "Open anyway".
-
-# Download latest DB
-This will download the latest data from company register Open Data portal.
-```
-./kyb install
-// or
-cargo run install
-```
-
-# Run
-```
-cargo run
-Runs by default at 127.0.0.1:10001
-```
-The index.html + client.js in releases file should be able to connect to the server.
-
 # REST API company search:
 ```
 curl -X POST http://127.0.0.1:10001/lv/company -H "Content-Type: application/json" -d '{"name": "Raimond fantastic "}'
@@ -187,6 +165,27 @@ here you can set server address + port and schedule db update time.
 // sudo apt-get install libsqlite3-dev
 cargo build --release
 ```
+# Mac, Win and Linux executables
+Available /release/ folder
+
+Fair warning - the releases are not notarized, so your computer will suggest you several times not to install it.  
+
+In Mac, (if you have "allow only notarized software" turned on), then after tryign to run the executable you may need to go to Settings -> Privacy / Security and click "Open anyway".
+
+# Download latest DB
+This will download the latest data from company register Open Data portal.
+```
+./kyb install
+// or
+cargo run install
+```
+
+# Run
+```
+cargo run
+Runs by default at 127.0.0.1:10001
+```
+The index.html + client.js in releases file should be able to connect to the server.
 
 # Test
 Some tests require db to be installed and some require server to be running.
